@@ -9,7 +9,7 @@
 > - Brak informacji o interakcji **nie oznacza**, że leki można bezpiecznie łączyć.
 > - Autor **nie ponosi odpowiedzialności** za decyzje podjęte na podstawie aplikacji ani za skutki jej użycia. Korzystasz na własną odpowiedzialność.
 
-**Aplikacja na telefon:** [zostanie uzupełniony po publikacji] · instrukcja instalacji: [`INSTRUKCJA_INSTALACJI.txt`](INSTRUKCJA_INSTALACJI.txt)
+**Aplikacja na telefon:** https://wnussio.github.io/pomocnik-farmaceuty/ · instrukcja instalacji: [`INSTRUKCJA_INSTALACJI.txt`](INSTRUKCJA_INSTALACJI.txt)
 
 ## Skąd pochodzą dane
 

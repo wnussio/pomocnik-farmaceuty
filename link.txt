@@ -1,0 +1,10 @@
+POMOCNIK FARMACEUTY - link do aplikacji na telefon
+
+https://wnussio.github.io/pomocnik-farmaceuty/
+
+Otworz link w Chrome (Android) lub Safari (iPhone) i dodaj do ekranu glownego.
+Szczegoly: INSTRUKCJA_INSTALACJI.txt
+
+Repozytorium (kod, opis, zastrzezenie): https://github.com/wnussio/pomocnik-farmaceuty
+
+Projekt testowy - nie zastepuje ChPL ani oceny farmaceuty/lekarza.

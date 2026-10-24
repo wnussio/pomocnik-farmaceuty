@@ -1,7 +1,7 @@
 POMOCNIK FARMACEUTY – INSTRUKCJA INSTALACJI NA TELEFONIE
 =========================================================
 
-Link do aplikacji: [zostanie uzupełniony po publikacji]
+Link do aplikacji: https://wnussio.github.io/pomocnik-farmaceuty/
 
 WAŻNE: projekt testowy. Aplikacja ma charakter wyłącznie informacyjny,
 nie zastępuje Charakterystyki Produktu Leczniczego (ChPL) ani oceny

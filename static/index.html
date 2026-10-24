@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pomocnik farmaceuty</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">℞</span>
+      <div>
+        <h1>Pomocnik farmaceuty</h1>
+        <p class="data-status" id="data-status">Ładowanie…</p>
+      </div>
+    </div>
+    <button class="btn btn-ghost" id="update-btn" type="button">Aktualizuj bazę leków</button>
+  </header>
+
+  <div class="disclaimer" role="note">
+    Narzędzie pomocnicze o charakterze informacyjnym. Nie zastępuje Charakterystyki Produktu Leczniczego
+    ani oceny farmaceuty/lekarza. Tabela interakcji jest wersją startową i wymaga weryfikacji.
+  </div>
+
+  <div class="layout">
+    <main>
+      <nav class="tabs" role="tablist">
+        <button role="tab" class="tab active" data-tab="lek">Wyszukaj lek</button>
+        <button role="tab" class="tab" data-tab="zamienniki">Zamienniki</button>
+        <button role="tab" class="tab" data-tab="suplementy">Suplementy</button>
+        <button role="tab" class="tab" data-tab="interakcje">Interakcje <span class="count" id="tab-count"></span></button>
+      </nav>
+
+      <!-- 1. Wyszukiwanie leku -->
+      <section class="panel" id="panel-lek">
+        <label class="search">
+          <span class="visually-hidden">Nazwa leku lub kod EAN</span>
+          <input id="product-q" type="search" autocomplete="off" autofocus
+                 placeholder="Nazwa leku lub kod EAN (np. apap, ketonal, 5909990…)">
+        </label>
+        <div class="split">
+          <ul class="results" id="product-results"></ul>
+          <div id="product-card" class="card-slot"></div>
+        </div>
+      </section>
+
+      <!-- 2. Zamienniki -->
+      <section class="panel hidden" id="panel-zamienniki">
+        <div class="substance-picker">
+          <label class="search">
+            <span class="visually-hidden">Substancja czynna</span>
+            <input id="substance-q" type="search" autocomplete="off"
+                   placeholder="Substancja czynna (np. paracetamol, amlodypina, ibuprofen)">
+          </label>
+          <ul class="suggestions hidden" id="substance-suggestions"></ul>
+        </div>
+        <div class="chips" id="substance-chips"></div>
+        <div class="filters hidden" id="eq-filters">
+          <label>Moc odniesienia <select id="f-strength"></select></label>
+          <label>Postać <select id="f-form"></select></label>
+          <label>Droga podania <select id="f-route"></select></label>
+          <label class="check"><input type="checkbox" id="f-combos"> pokaż też preparaty złożone</label>
+        </div>
+        <div id="eq-results"></div>
+      </section>
+
+      <!-- Suplementy diety (wybór składnika) -->
+      <section class="panel hidden" id="panel-suplementy">
+        <label class="search">
+          <span class="visually-hidden">Składnik suplementu</span>
+          <input id="supplement-q" type="search" autocomplete="off"
+                 placeholder="Składnik suplementu (np. magnez, D3, miłorząb, omega-3)">
+        </label>
+        <p class="hint supp-hint">Wybierz składnik z etykiety suplementu – suplement trafi na wspólną listę z lekami.
+          Witaminy i minerały zarejestrowane jako leki (np. Vigantol, Ascofer) wyszukasz w zakładce „Wyszukaj lek”.</p>
+        <div id="supplement-results"></div>
+      </section>
+
+      <!-- 3. Interakcje -->
+      <section class="panel hidden" id="panel-interakcje">
+        <div id="interaction-results">
+          <p class="empty">Dodaj co najmniej dwa leki do listy (przycisk „+ do listy”), a następnie kliknij „Sprawdź interakcje”.</p>
+        </div>
+      </section>
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h2>Lista do sprawdzenia</h2>
+        <button class="btn btn-link" id="clear-list" type="button">Wyczyść</button>
+      </div>
+      <fieldset class="patient">
+        <legend>Pacjent</legend>
+        <label>Wiek <select id="p-age"></select></label>
+        <label class="check"><input type="checkbox" id="p-pregnant"> ciąża</label>
+        <label class="check"><input type="checkbox" id="p-breastfeeding"> karmienie piersią</label>
+      </fieldset>
+      <ul class="check-list" id="check-list"></ul>
+      <button class="btn btn-ghost btn-small" id="add-alcohol" type="button">+ Alkohol</button>
+      <button class="btn btn-primary" id="check-btn" type="button">Sprawdź interakcje</button>
+      <p class="hint">Lista jest przechowywana tylko w tej przeglądarce. Nie wpisuj danych pacjenta.</p>
+    </aside>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

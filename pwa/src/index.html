@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Wyszukiwarka leków, zamienników i interakcji – działa offline.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Farmaceuta">
+  <title>Pomocnik farmaceuty</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Pomocnik farmaceuty</h1>
+      <p class="status" id="status">Wczytywanie bazy leków…</p>
+    </div>
+  </header>
+  <div class="banner hidden" id="update-banner">
+    Dostępna nowa wersja bazy leków.
+    <button type="button" class="btn btn-small btn-primary" id="update-btn">Odśwież</button>
+  </div>
+
+  <main id="main">
+    <!-- Wyszukaj lek -->
+    <section class="panel" id="panel-lek">
+      <div class="search-row">
+        <input id="product-q" type="search" inputmode="search" autocomplete="off"
+               placeholder="Nazwa leku lub kod EAN" aria-label="Nazwa leku lub kod EAN">
+        <button type="button" class="icon-btn" id="scan-btn" aria-label="Skanuj kod aparatem" title="Skanuj kod">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V4h3M18 4h3v3M21 17v3h-3M6 20H3v-3M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>
+        </button>
+      </div>
+      <ul class="results" id="product-results"></ul>
+      <p class="empty" id="product-hint">Wpisz nazwę (np. apap, ketonal) albo zeskanuj kod z opakowania.</p>
+    </section>
+
+    <!-- Zamienniki -->
+    <section class="panel hidden" id="panel-zamienniki">
+      <div class="picker">
+        <input id="substance-q" type="search" autocomplete="off" placeholder="Substancja czynna (np. amlodypina)"
+               aria-label="Substancja czynna">
+        <ul class="suggestions hidden" id="substance-suggestions"></ul>
+      </div>
+      <div class="chips" id="substance-chips"></div>
+      <details class="filters hidden" id="eq-filters" open>
+        <summary>Filtry</summary>
+        <label>Moc odniesienia <select id="f-strength"></select></label>
+        <label>Postać <select id="f-form"></select></label>
+        <label>Droga podania <select id="f-route"></select></label>
+        <label class="check"><input type="checkbox" id="f-combos"> pokaż też preparaty złożone</label>
+      </details>
+      <div id="eq-results"></div>
+    </section>
+
+    <!-- Suplementy -->
+    <section class="panel hidden" id="panel-suplementy">
+      <input id="supplement-q" type="search" autocomplete="off" placeholder="Składnik (np. magnez, D3, miłorząb)"
+             aria-label="Składnik suplementu">
+      <p class="hint">Wybierz składnik z etykiety suplementu. Witaminy i minerały zarejestrowane jako leki (np. Vigantol) znajdziesz w zakładce „Lek”.</p>
+      <div id="supplement-results"></div>
+    </section>
+
+    <!-- Lista i interakcje -->
+    <section class="panel hidden" id="panel-lista">
+      <fieldset class="patient" id="patient-box">
+        <legend>Pacjent</legend>
+        <label>Wiek <select id="p-age" aria-label="Wiek pacjenta"></select></label>
+        <div class="patient-flags">
+          <label class="check"><input type="checkbox" id="p-pregnant"> ciąża</label>
+          <label class="check"><input type="checkbox" id="p-breastfeeding"> karmienie piersią</label>
+        </div>
+      </fieldset>
+      <h2>Lista do sprawdzenia</h2>
+      <ul class="check-list" id="check-list"></ul>
+      <div class="row">
+        <button type="button" class="btn" id="add-alcohol">+ Alkohol</button>
+        <button type="button" class="btn btn-link" id="clear-list">Wyczyść listę</button>
+      </div>
+      <div id="interaction-results"></div>
+      <p class="hint">Lista jest zapisana tylko w tym telefonie. Nie wpisuj danych pacjenta.</p>
+      <p class="disclaimer">Narzędzie pomocnicze o charakterze informacyjnym. Nie zastępuje ChPL ani oceny farmaceuty/lekarza.
+        Tabela interakcji jest wersją startową i wymaga weryfikacji.</p>
+    </section>
+  </main>
+
+  <!-- Karta leku (pełny ekran) -->
+  <section class="sheet hidden" id="card-sheet" aria-modal="true" role="dialog">
+    <header class="sheet-head">
+      <button type="button" class="icon-btn" id="card-back" aria-label="Wróć">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <span>Karta leku</span>
+    </header>
+    <div class="sheet-body" id="card-body"></div>
+  </section>
+
+  <!-- Skaner -->
+  <section class="scanner hidden" id="scanner" aria-modal="true" role="dialog">
+    <video id="scanner-video" playsinline muted></video>
+    <div class="scanner-frame"></div>
+    <p class="scanner-text" id="scanner-text">Skieruj aparat na kod kreskowy opakowania</p>
+    <button type="button" class="btn btn-primary scanner-close" id="scanner-close">Zamknij</button>
+  </section>
+
+  <nav class="bottom-nav" aria-label="Zakładki">
+    <button type="button" class="nav active" data-tab="lek">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>Lek</button>
+    <button type="button" class="nav" data-tab="zamienniki">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>Zamienniki</button>
+    <button type="button" class="nav" data-tab="suplementy">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="7"/><path d="M5 12h14"/></svg>Suplementy</button>
+    <button type="button" class="nav" data-tab="lista">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>Lista<span class="badge-count" id="list-count"></span></button>
+  </nav>
+
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

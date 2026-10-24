@@ -1,0 +1,13 @@
+# Dane generowane lokalnie (pobierane z rejestru / budowane)
+data/raw/
+data/leki.db
+data/*.part
+data/aplikacja.log
+pwa/dist/
+
+# Python
+__pycache__/
+.pytest_cache/
+
+# Skrót Windows zawiera lokalną ścieżkę
+*.lnk

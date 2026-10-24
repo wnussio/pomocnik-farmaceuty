@@ -1,0 +1,104 @@
+POMOCNIK FARMACEUTY – INSTRUKCJA INSTALACJI NA TELEFONIE
+=========================================================
+
+Link do aplikacji: [zostanie uzupełniony po publikacji]
+
+WAŻNE: projekt testowy. Aplikacja ma charakter wyłącznie informacyjny,
+nie zastępuje Charakterystyki Produktu Leczniczego (ChPL) ani oceny
+farmaceuty/lekarza. Tabele interakcji nie zostały zweryfikowane.
+
+
+NIE TRZEBA NICZEGO ODBLOKOWYWAĆ
+-------------------------------
+To nie jest plik APK ani aplikacja spoza sklepu. Aplikacja instaluje się
+przez przeglądarkę (tzw. aplikacja webowa / PWA), dlatego:
+  - NIE włączaj „instalacji z nieznanych źródeł”,
+  - NIE wyłączaj Google Play Protect ani żadnych zabezpieczeń telefonu,
+  - nie musisz zakładać konta ani się logować.
+Jeżeli cokolwiek prosi Cię o wyłączenie zabezpieczeń – to nie jest ta
+aplikacja. Zamknij to.
+
+
+ANDROID (Samsung, Xiaomi, Motorola itp.)
+----------------------------------------
+Potrzebna przeglądarka: Google Chrome (zalecana). Działa też Samsung Internet i Edge.
+
+1. Otwórz link w przeglądarce Chrome.
+2. Poczekaj kilka sekund, aż na górze pojawi się napis
+   „... · działa offline ✓” (baza leków zapisała się w telefonie).
+3. Zainstaluj:
+   - Chrome może sam pokazać okienko „Zainstaluj aplikację” – kliknij „Zainstaluj”,
+   - jeśli nie pokazał: menu ⋮ (trzy kropki w prawym górnym rogu)
+     → „Zainstaluj aplikację” lub „Dodaj do ekranu głównego” → „Zainstaluj”.
+4. Ikona „Farmaceuta” pojawi się na ekranie głównym i na liście aplikacji.
+
+Samsung Internet: menu ☰ → „Dodaj stronę do” → „Ekran startowy”.
+
+
+IPHONE / IPAD
+-------------
+Potrzebna przeglądarka: Safari (na iOS 16.4+ działa też Chrome).
+
+1. Otwórz link w Safari.
+2. Poczekaj kilka sekund, aż na górze pojawi się napis „... · działa offline ✓”.
+3. Stuknij przycisk Udostępnij (kwadrat ze strzałką w górę, na dole ekranu).
+4. Przewiń w dół i wybierz „Do ekranu początkowego”.
+5. Stuknij „Dodaj” w prawym górnym rogu.
+6. Ikona „Farmaceuta” pojawi się na ekranie początkowym.
+
+
+PIERWSZE UŻYCIE
+---------------
+- Pierwsze otwarcie wymaga internetu (pobiera się ok. 2 MB; w telefonie
+  zajmie ok. 10 MB). Później aplikacja działa także bez internetu.
+- Skanowanie kodu EAN: zakładka „Lek” → ikona kodu kreskowego obok
+  wyszukiwarki → przy pierwszym użyciu telefon zapyta o dostęp do aparatu
+  → wybierz „Zezwól”. Aparat jest używany tylko podczas skanowania.
+- Linki „ChPL” i „Ulotka” w karcie leku wymagają internetu.
+- Lista leków i dane pacjenta zapisują się tylko w tym telefonie.
+  Nie wpisuj danych osobowych pacjenta. Po obsłużeniu pacjenta użyj
+  „Wyczyść listę” (czyści też wiek / ciążę / karmienie).
+
+
+AKTUALIZACJE
+------------
+Baza leków aktualizuje się automatycznie raz w tygodniu (poniedziałek).
+Gdy telefon ma internet, w aplikacji pojawi się pasek
+„Dostępna nowa wersja bazy leków” → stuknij „Odśwież”.
+Nic nie trzeba pobierać ręcznie; stara wersja usuwa się sama.
+
+
+CO ZROBIĆ, GDY…
+---------------
+• Nie ma opcji „Zainstaluj aplikację” / „Do ekranu początkowego”
+  – Upewnij się, że używasz Chrome (Android) lub Safari (iPhone).
+  – Przeglądarki wbudowane w inne aplikacje (np. link otwarty w Messengerze,
+    Facebooku, Instagramie, poczcie) nie pozwalają instalować. Wybierz
+    „Otwórz w przeglądarce” / „Otwórz w Chrome” / „Otwórz w Safari”.
+  – Nie używaj trybu incognito / prywatnego.
+
+• Napis „działa offline ✓” się nie pojawia
+  – Sprawdź internet i odśwież stronę. Wyłącz na chwilę tryb oszczędzania
+    danych / baterii, jeśli jest włączony.
+
+• Skaner pokazuje „Brak zgody na użycie aparatu”
+  – Android: Ustawienia → Aplikacje → Chrome (lub „Farmaceuta”)
+    → Uprawnienia → Aparat → „Zezwalaj podczas używania”.
+  – iPhone: Ustawienia → Safari → Aparat → „Pytaj” lub „Zezwalaj”.
+  – Kod zawsze można też wpisać ręcznie w wyszukiwarkę.
+
+• Telefon służbowy blokuje instalację
+  – Telefon zarządzany przez firmę (MDM) może blokować instalację aplikacji
+    webowych lub dostęp do aparatu. Nie obchodź tego – zapytaj
+    administratora IT. Aplikacja działa też jako zwykła zakładka w przeglądarce.
+
+• Aplikacja wyświetla stare dane albo dziwnie się zachowuje
+  – Zamknij ją całkowicie i otwórz ponownie (z internetem).
+  – W ostateczności: usuń ikonę i zainstaluj od nowa z linku.
+
+
+ODINSTALOWANIE
+--------------
+Android: przytrzymaj ikonę „Farmaceuta” → „Odinstaluj”.
+iPhone: przytrzymaj ikonę → „Usuń aplikację” → „Usuń z ekranu początkowego”
+        (dane usuniesz w: Ustawienia → Safari → Zaawansowane → Dane witryn).

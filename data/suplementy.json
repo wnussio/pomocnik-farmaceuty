@@ -1,0 +1,42 @@
+{
+  "_opis": "Katalog składników suplementów diety. 'substancje' - nazwy łacińskie (jedno słowo identyfikujące) używane do dopasowania grup w interakcje.json i do wykrywania dublowania z lekami; 'atc' - kod ATC odpowiadającego leku (do grup definiowanych przez ATC, np. kationy); 'szukaj' - dodatkowe hasła wyszukiwania.",
+  "status": "Wersja startowa – do weryfikacji przez farmaceutę.",
+  "skladniki": [
+    {"id": "magnez", "nazwa": "Magnez", "kategoria": "Minerały", "popularny": true, "substancje": ["Magnesium"], "atc": ["A12CC"], "szukaj": ["magnesium", "Mg", "cytrynian magnezu", "mleczan magnezu"]},
+    {"id": "wapn", "nazwa": "Wapń", "kategoria": "Minerały", "popularny": true, "substancje": ["Calcium"], "atc": ["A12AA"], "szukaj": ["calcium", "Ca", "węglan wapnia"]},
+    {"id": "zelazo", "nazwa": "Żelazo", "kategoria": "Minerały", "popularny": true, "substancje": ["Ferrum"], "atc": ["B03AA"], "szukaj": ["iron", "Fe", "ferrum", "fumaran żelaza"]},
+    {"id": "cynk", "nazwa": "Cynk", "kategoria": "Minerały", "popularny": true, "substancje": ["Zincum"], "atc": ["A12CB"], "szukaj": ["zinc", "Zn", "glukonian cynku"]},
+    {"id": "potas", "nazwa": "Potas", "kategoria": "Minerały", "popularny": false, "substancje": ["Kalium"], "atc": ["A12BA"], "szukaj": ["potassium", "K", "chlorek potasu"]},
+    {"id": "selen", "nazwa": "Selen", "kategoria": "Minerały", "popularny": false, "substancje": ["Selenium"], "atc": ["A12CE"], "szukaj": ["selenium", "Se"]},
+    {"id": "jod", "nazwa": "Jod", "kategoria": "Minerały", "popularny": false, "substancje": ["Iodum"], "atc": ["H03CA"], "szukaj": ["iodine", "jodek potasu", "kelp", "morszczyn"]},
+
+    {"id": "wit_d", "nazwa": "Witamina D3 (cholekalcyferol)", "kategoria": "Witaminy", "popularny": true, "substancje": ["Cholecalciferolum"], "atc": ["A11CC05"], "szukaj": ["witamina d", "wit d", "d3", "cholekalcyferol", "vitamin d"]},
+    {"id": "wit_k", "nazwa": "Witamina K (K1, K2/MK-7)", "kategoria": "Witaminy", "popularny": true, "substancje": ["Phytomenadionum", "Menaquinonum"], "atc": ["B02BA"], "szukaj": ["witamina k", "wit k", "k2", "mk-7", "menachinon", "fitomenadion"]},
+    {"id": "wit_a", "nazwa": "Witamina A (retinol)", "kategoria": "Witaminy", "popularny": false, "substancje": ["Retinolum"], "atc": ["A11CA01"], "szukaj": ["witamina a", "wit a", "retinol", "tran"]},
+    {"id": "wit_e", "nazwa": "Witamina E (tokoferol)", "kategoria": "Witaminy", "popularny": false, "substancje": ["Tocopherolum"], "atc": ["A11HA03"], "szukaj": ["witamina e", "wit e", "tokoferol"]},
+    {"id": "wit_b6", "nazwa": "Witamina B6 (pirydoksyna)", "kategoria": "Witaminy", "popularny": false, "substancje": ["Pyridoxinum"], "atc": ["A11HA02"], "szukaj": ["witamina b6", "wit b6", "pirydoksyna", "b-complex"]},
+    {"id": "kwas_foliowy", "nazwa": "Kwas foliowy", "kategoria": "Witaminy", "popularny": false, "substancje": ["Acidum folicum"], "atc": ["B03BB01"], "szukaj": ["folian", "metylofolian", "witamina b9", "folic"]},
+    {"id": "wit_c", "nazwa": "Witamina C", "kategoria": "Witaminy", "popularny": true, "substancje": ["Acidum ascorbicum"], "atc": ["A11GA01"], "szukaj": ["witamina c", "wit c", "kwas askorbinowy"]},
+
+    {"id": "omega3", "nazwa": "Omega-3 (olej rybi, EPA/DHA)", "kategoria": "Inne", "popularny": true, "substancje": ["Omega"], "atc": ["C10AX06"], "szukaj": ["omega 3", "olej rybi", "tran", "epa", "dha", "olej z kryla"]},
+    {"id": "koenzym_q10", "nazwa": "Koenzym Q10", "kategoria": "Inne", "popularny": false, "substancje": ["Ubidecarenonum"], "atc": ["C01EB09"], "szukaj": ["q10", "koenzym", "ubichinon", "ubichinol"]},
+    {"id": "melatonina", "nazwa": "Melatonina", "kategoria": "Inne", "popularny": true, "substancje": ["Melatoninum"], "atc": ["N05CH01"], "szukaj": ["melatonin", "sen"]},
+    {"id": "htp", "nazwa": "5-HTP / L-tryptofan", "kategoria": "Inne", "popularny": false, "substancje": ["Oxitriptanum", "Tryptophanum"], "atc": [], "szukaj": ["5-htp", "5htp", "tryptofan", "griffonia"]},
+    {"id": "glukozamina", "nazwa": "Glukozamina (± chondroityna)", "kategoria": "Inne", "popularny": false, "substancje": ["Glucosaminum"], "atc": ["M01AX05"], "szukaj": ["glukozamina", "chondroityna", "stawy"]},
+    {"id": "czerwony_ryz", "nazwa": "Czerwony ryż drożdżowy (monakolina K)", "kategoria": "Inne", "popularny": false, "substancje": ["Monascus"], "atc": [], "szukaj": ["czerwony ryż", "monakolina", "red yeast rice", "cholesterol"]},
+    {"id": "babka_jajowata", "nazwa": "Błonnik – babka jajowata (psyllium)", "kategoria": "Inne", "popularny": false, "substancje": ["Psyllium", "Ispaghula"], "atc": ["A06AC01"], "szukaj": ["błonnik", "psyllium", "babka jajowata", "babka płesznik", "plantago ovata"]},
+    {"id": "probiotyk", "nazwa": "Probiotyk (bakterie Lactobacillus/Bifidobacterium)", "kategoria": "Inne", "popularny": true, "substancje": ["Lactobacillus", "Bifidobacterium"], "atc": ["A07FA01"], "szukaj": ["probiotyk", "lactobacillus", "bifidobacterium", "lakcid"]},
+    {"id": "grejpfrut", "nazwa": "Grejpfrut (sok, ekstrakt z pestek)", "kategoria": "Inne", "popularny": false, "substancje": ["Grejpfrut"], "atc": [], "szukaj": ["grejpfrut", "grapefruit", "ekstrakt z pestek grejpfruta"]},
+
+    {"id": "milorzab", "nazwa": "Miłorząb japoński (Ginkgo biloba)", "kategoria": "Zioła", "popularny": true, "substancje": ["Ginkgo", "Ginkgonis"], "atc": ["N06DX02"], "szukaj": ["miłorząb", "ginkgo", "pamięć"]},
+    {"id": "dziurawiec", "nazwa": "Dziurawiec (Hypericum)", "kategoria": "Zioła", "popularny": true, "substancje": ["Hypericum"], "atc": ["N06AX25"], "szukaj": ["dziurawiec", "hypericum", "st. john's wort"]},
+    {"id": "zen_szen", "nazwa": "Żeń-szeń (Panax ginseng)", "kategoria": "Zioła", "popularny": false, "substancje": ["Ginseng", "Panax"], "atc": [], "szukaj": ["żeń-szeń", "zen szen", "ginseng", "panax"]},
+    {"id": "kurkuma", "nazwa": "Kurkuma / kurkumina", "kategoria": "Zioła", "popularny": true, "substancje": ["Curcuma", "Curcuminum"], "atc": [], "szukaj": ["kurkuma", "kurkumina", "curcumin"]},
+    {"id": "czosnek", "nazwa": "Czosnek (ekstrakt)", "kategoria": "Zioła", "popularny": false, "substancje": ["Allium"], "atc": [], "szukaj": ["czosnek", "garlic", "allicyna"]},
+    {"id": "lukrecja", "nazwa": "Lukrecja (korzeń)", "kategoria": "Zioła", "popularny": false, "substancje": ["Liquiritiae", "Glycyrrhizae"], "atc": [], "szukaj": ["lukrecja", "glicyryzyna", "liquorice"]},
+    {"id": "kozlek", "nazwa": "Kozłek lekarski (waleriana)", "kategoria": "Zioła", "popularny": true, "substancje": ["Valeriana"], "atc": ["N05CM09"], "szukaj": ["kozłek", "waleriana", "walerian", "valeriana", "melisa"]},
+    {"id": "ashwagandha", "nazwa": "Ashwagandha (Withania somnifera)", "kategoria": "Zioła", "popularny": true, "substancje": ["Withania"], "atc": [], "szukaj": ["ashwagandha", "witania", "żeń-szeń indyjski"]},
+    {"id": "berberyna", "nazwa": "Berberyna", "kategoria": "Zioła", "popularny": false, "substancje": ["Berberinum"], "atc": [], "szukaj": ["berberyna", "berberine", "berberys"]},
+    {"id": "jezowka", "nazwa": "Jeżówka (Echinacea)", "kategoria": "Zioła", "popularny": false, "substancje": ["Echinacea"], "atc": [], "szukaj": ["jeżówka", "echinacea", "odporność"]}
+  ]
+}

@@ -63,10 +63,12 @@ def main() -> None:
     logging.basicConfig(stream=log_file, level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
     import uvicorn
-    from .main import activity, app, start_update, state, update_status
+    from .main import activity, app, start_update, state, update_refund, update_status
 
     if not state["store"].loaded:
         start_update()  # pierwsze uruchomienie: pobranie rejestru w tle, postęp widoczny na stronie
+    elif not state["refund"].loaded:
+        threading.Thread(target=update_refund, daemon=True).start()  # baza sprzed dodania refundacji
 
     server = uvicorn.Server(uvicorn.Config(app, host=HOST, port=PORT, log_config=None))
     threading.Thread(target=_open_browser_when_ready, daemon=True).start()

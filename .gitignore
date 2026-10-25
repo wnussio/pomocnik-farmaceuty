@@ -11,3 +11,6 @@ __pycache__/
 
 # Skrót Windows zawiera lokalną ścieżkę
 *.lnk
+
+# Lista refundacyjna (pobierana z gov.pl)
+data/refundacja.json

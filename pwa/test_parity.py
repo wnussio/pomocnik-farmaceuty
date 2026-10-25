@@ -16,10 +16,12 @@ import threading
 from pathlib import Path
 
 from app import importer
+from app.dispensing import DispensingRules
 from app.interactions import ALCOHOL_ITEM, CheckItem, InteractionDB
 from app.patient import PatientRules
 from app.store import Store
 from app.supplements import SupplementDB
+from app.symptoms import SymptomDB
 from pwa.build import DIST_DIR
 
 BROWSERS = [
@@ -35,6 +37,7 @@ SUBSTANCE_QUERIES = ["paracetamol", "amlodypina", "ibupro", "kwas acetylosalicyl
                      "klopidogrel", "warfaryna", "lit", "metformina", "perindopryl", "parcetamol", "wit"]
 EQ_KEYS = [["paracetamol"], ["amlodipin"], ["ibuprofen"], ["perindopril", "amlodipin"]]
 SUPP_QUERIES = ["", "magn", "d3", "omega", "ryż", "miłorząb", "kurkum", "wit k", "psyllium"]
+SYMPTOM_QUERIES = ["", "ból", "glowy", "kaszel", "rozwolnienie", "alergia", "pęcherz", "grzybica stóp", "xyz"]
 
 JS_RUNNER = """<!doctype html><meta charset="utf-8"><script src="engine.js"></script><pre id="out"></pre>
 <script>
@@ -48,6 +51,8 @@ JS_RUNNER = """<!doctype html><meta charset="utf-8"><script src="engine.js"></sc
   const inter = new Engine.Interactions(await get("data/interakcje.json"));
   const supp = new Engine.Supplements(await get("data/suplementy.json"));
   const patient = new Engine.PatientRules(await get("data/pacjent.json"), inter);
+  const disp = new Engine.DispensingRules(await get("data/ostrzezenia.json"), patient);
+  const symptoms = new Engine.Symptoms(await get("data/objawy.json"));
   const item = (x) => x.alkohol ? Engine.ALCOHOL_ITEM() : x.suplement ? supp.checkItem(x.suplement)
                     : store.checkItem(store.products.get(x.id));
   const out = {
@@ -58,6 +63,10 @@ JS_RUNNER = """<!doctype html><meta charset="utf-8"><script src="engine.js"></sc
     supplements: cases.supplements.map((q) => supp.search(q).map((s) => s.id)),
     interactions: cases.interactions.map((items) => inter.check(items.map(item))),
     patient: cases.patient.map(([items, profile]) => patient.check(items.map(item), profile)),
+    dispensing: cases.dispensing.map((items) => disp.check(items.map(item))),
+    symptom_search: cases.symptom_search.map((q) => symptoms.search(q).map((s) => s.id)),
+    symptom_products: symptoms.items.flatMap((s) => s.opcje.map((o) => symptoms.products(store, o).map((p) => p.id))),
+    symptom_warnings: symptoms.items.flatMap((s) => s.opcje.map((o) => disp.check([symptoms.optionItem(o)]))),
   };
   document.getElementById("out").textContent = JSON.stringify(out);
 })().catch((e) => { document.getElementById("out").textContent = "BLAD " + e.stack; });
@@ -82,6 +91,8 @@ def main() -> int:
     inter = InteractionDB(importer.DATA_DIR / "interakcje.json")
     supp = SupplementDB(importer.DATA_DIR / "suplementy.json")
     patient = PatientRules(importer.DATA_DIR / "pacjent.json", inter)
+    disp = DispensingRules(importer.DATA_DIR / "ostrzezenia.json", patient)
+    symptoms = SymptomDB(importer.DATA_DIR / "objawy.json")
 
     rng = random.Random(42)
     systemic = [p for p in store.products.values() if p.substances]
@@ -107,6 +118,11 @@ def main() -> int:
         profile = {"wiek": rng.choice(list(patient.bands)), "ciaza": rng.random() < 0.3, "karmienie": rng.random() < 0.3}
         patient_cases.append([items, profile])
 
+    # Ostrzeżenia przy wydaniu: leki z grup reguł, także miejscowe.
+    disp_pool = [p for p in store.products.values() if p.substances and any(
+        disp.groups[r["grupa"]].tokens & set(t for s in p.substances for t in s.tokens) for r in disp.rules)]
+    dispensing_cases = [[{"id": p.id} for p in rng.sample(disp_pool, rng.randint(1, 4))] for _ in range(300)]
+
     def py_item(x):
         if x.get("alkohol"):
             return ALCOHOL_ITEM
@@ -126,10 +142,15 @@ def main() -> int:
         "supplements": [[s["id"] for s in supp.search(q)] for q in SUPP_QUERIES],
         "interactions": [_normalize_check(inter.check([py_item(x) for x in items])) for items in combos],
         "patient": [patient.check([py_item(x) for x in items], profile) for items, profile in patient_cases],
+        "dispensing": [disp.check([py_item(x) for x in items]) for items in dispensing_cases],
+        "symptom_search": [[s["id"] for s in symptoms.search(q)] for q in SYMPTOM_QUERIES],
+        "symptom_products": [[p.id for p in symptoms.products(store, o)] for s in symptoms.items.values() for o in s["opcje"]],
+        "symptom_warnings": [disp.check([symptoms.option_item(o)]) for s in symptoms.items.values() for o in s["opcje"]],
     }
     cases = {"products": PRODUCT_QUERIES, "substances": SUBSTANCE_QUERIES,
              "equivalents": [[k, c] for k in EQ_KEYS for c in (False, True)],
-             "supplements": SUPP_QUERIES, "interactions": combos, "patient": patient_cases}
+             "supplements": SUPP_QUERIES, "interactions": combos, "patient": patient_cases,
+             "dispensing": dispensing_cases, "symptom_search": SYMPTOM_QUERIES}
 
     (DIST_DIR / "parity-cases.json").write_text(json.dumps(cases), encoding="utf-8")
     (DIST_DIR / "parity.html").write_text(JS_RUNNER, encoding="utf-8")

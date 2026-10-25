@@ -16,12 +16,15 @@ import zlib
 from datetime import datetime
 from pathlib import Path
 
-from app import importer
+from app import importer, refund
+from app.dispensing import DispensingRules
 from app.interactions import InteractionDB
 from app.normalize import IGNORED_WORDS, POLISH_ALIASES
 from app.patient import PatientRules
+from app.refund import RefundDB
 from app.store import Store
 from app.supplements import SupplementDB
+from app.symptoms import SymptomDB
 
 PWA_DIR = Path(__file__).resolve().parent
 SRC_DIR = PWA_DIR / "src"
@@ -109,6 +112,35 @@ def build_supplements(sdb: SupplementDB) -> dict:
     return {"status": sdb.status, "skladniki": items}
 
 
+def build_dispensing(rules: DispensingRules, patient: PatientRules) -> dict:
+    own = {gid: g for gid, g in rules.groups.items() if gid not in patient.groups}
+    return {
+        "status": rules.status, "rodzaje": rules.kinds,
+        "grupy": {g.id: {"nazwa": g.name, "tokeny": sorted(g.tokens), "atc": list(g.atc)} for g in own.values()},
+        "reguly": rules.rules,
+    }
+
+
+def build_symptoms(sdb: SymptomDB) -> dict:
+    items = []
+    for sid, s in sdb.items.items():
+        words, stems = sdb._search[sid]
+        options = [{k: v for k, v in o.items() if not k.startswith("_")} | {"tokeny": o["_tokeny"]} for o in s["opcje"]]
+        items.append({k: v for k, v in s.items() if k not in ("opcje", "szukaj")}
+                     | {"opcje": options, "szukaj": words, "rdzenie": sorted(stems)})
+    return {"status": sdb.status, "pytania": sdb.questions, "objawy": items}
+
+
+def build_refund(db: RefundDB, store: Store) -> dict:
+    """Tylko opakowania z rejestru; skrót dla listy wyników liczony od razu (karta leku i tak ładuje szczegóły)."""
+    packages = {g: r for g, r in db.packages.items() if g in store.by_gtin}
+    badges = {}
+    for p in store.products.values():
+        if badge := db.product_badge(p):
+            badges[p.id] = badge
+    return {"obwieszczenie": db.title, "strona": db.page, "opakowania": packages, "produkty": badges}
+
+
 def _png(size: int) -> bytes:
     """Ikona: turkusowy zaokrąglony kwadrat z białym krzyżem (bez zewnętrznych bibliotek)."""
     teal, white = (15, 118, 110, 255), (255, 255, 255, 255)
@@ -143,6 +175,13 @@ def build(download: bool = False) -> Path:
         if not importer.RAW_XML.exists():
             importer.download()
         importer.import_xml()
+    if download or not refund.JSON_PATH.exists():
+        try:
+            if download or not refund.RAW_XLSX.exists():
+                refund.download()
+            refund.import_xlsx()
+        except Exception as exc:  # noqa: BLE001 - aplikacja działa także bez listy refundacyjnej
+            print(f"Uwaga: lista refundacyjna niedostępna ({exc})")
 
     store = Store(importer.DB_PATH)
     if DIST_DIR.exists():
@@ -158,8 +197,12 @@ def build(download: bool = False) -> Path:
     _write_json(data_dir / "ean.json", store.by_gtin)
     interactions = InteractionDB(DATA_DIR / "interakcje.json")
     _write_json(data_dir / "interakcje.json", build_interactions(interactions))
-    _write_json(data_dir / "pacjent.json",
-                build_patient(PatientRules(DATA_DIR / "pacjent.json", interactions), interactions))
+    patient = PatientRules(DATA_DIR / "pacjent.json", interactions)
+    _write_json(data_dir / "pacjent.json", build_patient(patient, interactions))
+    _write_json(data_dir / "ostrzezenia.json",
+                build_dispensing(DispensingRules(DATA_DIR / "ostrzezenia.json", patient), patient))
+    _write_json(data_dir / "objawy.json", build_symptoms(SymptomDB(DATA_DIR / "objawy.json")))
+    _write_json(data_dir / "refundacja.json", build_refund(RefundDB(refund.JSON_PATH), store))
     _write_json(data_dir / "suplementy.json", build_supplements(SupplementDB(DATA_DIR / "suplementy.json")))
     _write_json(data_dir / "normalizacja.json", {"ignorowane": sorted(IGNORED_WORDS), "aliasy": POLISH_ALIASES})
     for size in (192, 512):

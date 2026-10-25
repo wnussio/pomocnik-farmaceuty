@@ -1,4 +1,4 @@
-"""Ostrzeżenia zależne od pacjenta (wiek, ciąża, karmienie piersią) – data/pacjent.json.
+"""Ostrzeżenia zależne od pacjenta (wiek – dzieci i seniorzy, ciąża, karmienie piersią) – data/pacjent.json.
 
 W odróżnieniu od interakcji dotyczą pojedynczych pozycji listy i obejmują też leki miejscowe.
 """
@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .interactions import LEVEL_ORDER, CheckItem, InteractionDB, match_groups, parse_group
 
-CONDITIONS = ("wiek", "ciaza", "karmienie")
+CONDITIONS = ("wiek", "wiek_od", "ciaza", "karmienie")
 ROUTES = (None, "ogolna", "miejscowa")
 ADULT = "dorosly"
 
@@ -22,6 +22,8 @@ def age_label(months: int) -> str:
 def condition_title(rule: dict) -> str:
     if rule["warunek"] == "wiek":
         return f"Wiek: {age_label(rule['ponizej_mies'])}"
+    if rule["warunek"] == "wiek_od":
+        return f"Wiek: {rule['od_mies'] // 12} lat i więcej"
     return "Ciąża" if rule["warunek"] == "ciaza" else "Karmienie piersią"
 
 
@@ -48,6 +50,8 @@ class PatientRules:
                 raise ValueError(f"{where}: nieznana droga {r.get('droga')}")
             if r["warunek"] == "wiek" and not isinstance(r.get("ponizej_mies"), int):
                 raise ValueError(f"{where}: brak progu 'ponizej_mies'")
+            if r["warunek"] == "wiek_od" and not isinstance(r.get("od_mies"), int):
+                raise ValueError(f"{where}: brak progu 'od_mies'")
 
     @property
     def age_bands(self) -> list[dict]:
@@ -68,10 +72,12 @@ class PatientRules:
             return False
         if rule.get("droga") == "miejscowa" and not item.topical:
             return False
-        if rule["warunek"] == "wiek":
+        if rule["warunek"] in ("wiek", "wiek_od"):
             band = self.bands.get(profile.get("wiek") or ADULT)
             if band is None:
                 raise ValueError(f"Nieznany przedział wieku: {profile.get('wiek')}")
+            if rule["warunek"] == "wiek_od":
+                return band["od_mies"] >= rule["od_mies"]
             return band["od_mies"] < rule["ponizej_mies"]
         return bool(profile.get(rule["warunek"]))
 

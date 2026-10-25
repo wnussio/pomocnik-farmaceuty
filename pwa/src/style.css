@@ -108,6 +108,48 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1p
   background: var(--orange-soft); color: var(--orange); margin-left: 4px; vertical-align: 1px;
 }
 .badge.otc { background: var(--accent-soft); color: var(--accent); }
+.badge.ref { background: var(--accent-soft); color: var(--accent); }
+.badge.free { background: var(--yellow-soft); color: var(--yellow); }
+
+/* refundacja */
+.refund { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.refund table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 13px; }
+.refund th, .refund td { text-align: left; padding: 4px 6px 4px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.refund th { color: var(--muted); font-weight: 600; }
+
+/* objawy */
+.medical-warning {
+  padding: 10px 12px; border-radius: var(--radius); margin-bottom: 12px; font-size: 13.5px;
+  background: var(--red-soft); border: 1px solid var(--red); border-left-width: 5px;
+}
+.symptom-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.symptom-chip {
+  font: inherit; font-size: 14px; min-height: 40px; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border);
+}
+.symptom-chip:active { border-color: var(--accent); }
+.questions, .red-flags { padding: 10px 12px; border-radius: var(--radius); margin: 10px 0; font-size: 14px; }
+.questions { background: var(--surface); border: 1px solid var(--border); }
+.questions summary { font-weight: 600; cursor: pointer; }
+.questions ul, .red-flags ul, .tips { margin: 6px 0 0; padding-left: 20px; }
+.questions li, .red-flags li, .tips li { margin: 3px 0; }
+.red-flags { background: var(--red-soft); border: 1px solid var(--border); border-left: 5px solid var(--red); }
+.red-flags-title { font-weight: 700; color: var(--red); }
+.option {
+  background: var(--surface); border: 1px solid var(--border); border-left-width: 5px; border-radius: var(--radius);
+  padding: 12px; margin-top: 10px;
+}
+.option.ok { border-left-color: var(--accent); }
+.option.niewielka { border-left-color: var(--yellow); }
+.option.istotna { border-left-color: var(--orange); }
+.option.przeciwwskazane { border-left-color: var(--red); }
+.option h3 { font-size: 16px; }
+.option .pill { display: inline-block; margin-top: 6px; }
+.pill.ok { background: var(--accent-soft); color: var(--accent); }
+.option-note { margin: 6px 0; font-size: 14px; color: var(--muted); }
+.option-block { margin: 8px 0; }
+.option-block-title, .option-block > summary { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; cursor: pointer; }
+.option details > summary { cursor: pointer; font-size: 14px; color: var(--accent); margin: 8px 0; }
 
 /* zamienniki */
 .picker { position: relative; }
@@ -220,7 +262,7 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1p
 
 /* dolny pasek */
 .bottom-nav {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: grid; grid-template-columns: repeat(4, 1fr);
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: grid; grid-template-columns: repeat(5, 1fr);
   height: calc(var(--nav-h) + env(safe-area-inset-bottom)); padding-bottom: env(safe-area-inset-bottom);
   background: var(--surface); border-top: 1px solid var(--border);
 }
@@ -234,6 +276,14 @@ input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1p
   background: var(--red); color: #fff; font-size: 11px; line-height: 18px; text-align: center;
 }
 .badge-count:empty { display: none; }
+/* filtr: tylko refundowane */
+.ref-toggle {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 12px 4px 8px; cursor: pointer;
+  border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; user-select: none;
+}
+.ref-toggle input { margin: 0; accent-color: var(--accent); }
+.ref-toggle:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
 .toast {
   position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom));
   z-index: 60; background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; max-width: 90vw;

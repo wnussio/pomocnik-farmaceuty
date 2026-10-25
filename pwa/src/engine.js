@@ -1,6 +1,6 @@
 // Logika aplikacji bez interfejsu: normalizacja, wyszukiwanie leków i substancji, zamienniki,
-// suplementy i sprawdzanie interakcji. Port 1:1 z app/normalize.py, app/store.py,
-// app/supplements.py i app/interactions.py (zgodność sprawdza pwa/test_parity.py).
+// suplementy, interakcje, ostrzeżenia (pacjent, wydanie) i objawy. Port 1:1 z modułów app/
+// (normalize, store, supplements, interactions, patient, dispensing, symptoms); zgodność sprawdza pwa/test_parity.py.
 "use strict";
 
 const Engine = (() => {
@@ -329,6 +329,7 @@ const Engine = (() => {
 
   function conditionTitle(rule) {
     if (rule.warunek === "wiek") return `Wiek: ${ageLabel(rule.ponizej_mies)}`;
+    if (rule.warunek === "wiek_od") return `Wiek: ${Math.floor(rule.od_mies / 12)} lat i więcej`;
     return rule.warunek === "ciaza" ? "Ciąża" : "Karmienie piersią";
   }
 
@@ -354,6 +355,7 @@ const Engine = (() => {
       if (rule.droga === "ogolna" && item.topical) return false;
       if (rule.droga === "miejscowa" && !item.topical) return false;
       if (rule.warunek === "wiek") return this.bands.get(profile.wiek || ADULT).od_mies < rule.ponizej_mies;
+      if (rule.warunek === "wiek_od") return this.bands.get(profile.wiek || ADULT).od_mies >= rule.od_mies;
       return Boolean(profile[rule.warunek]);
     }
 
@@ -381,6 +383,79 @@ const Engine = (() => {
     }
   }
 
+  /* ---------- ostrzeżenia przy wydaniu: pojazdy, słońce, żywność (port app/dispensing.py) ---------- */
+
+  class DispensingRules {
+    constructor(raw, patient) {
+      this.status = raw.status;
+      this.kinds = raw.rodzaje;
+      const own = Object.entries(raw.grupy).map(([id, g]) => ({ id, name: g.nazwa, tokens: new Set(g.tokeny), atc: g.atc, within: null }));
+      this.groups = [...patient.groups, ...own];
+      this.byId = new Map(this.groups.map((g) => [g.id, g]));
+      this.rules = raw.reguly;
+    }
+
+    check(items) {
+      const best = new Map();
+      items.forEach((item, idx) => {
+        const matched = matchGroups(item, this.groups);
+        this.rules.forEach((rule, order) => {
+          if (!matched.has(rule.grupa)) return;
+          if ((rule.droga === "ogolna" && item.topical) || (rule.droga === "miejscowa" && !item.topical)) return;
+          const key = `${idx}|${rule.rodzaj}|${rule.grupa}`;
+          const current = best.get(key);
+          if (!current || LEVEL_ORDER[rule.poziom] < LEVEL_ORDER[current.rule.poziom]) {
+            best.set(key, { idx, order, rule, item, hits: matched.get(rule.grupa) });
+          }
+        });
+      });
+      return [...best.values()]
+        .sort((a, b) => a.idx - b.idx || LEVEL_ORDER[a.rule.poziom] - LEVEL_ORDER[b.rule.poziom] || a.order - b.order)
+        .map(({ idx, rule, item, hits }) => ({
+          rodzaj: rule.rodzaj, tytul: this.kinds[rule.rodzaj].nazwa, poziom: rule.poziom, pozycja: idx, lek: item.label,
+          substancje: [...new Set(hits.map(([, n]) => n))].sort(pyCompare), grupa: this.byId.get(rule.grupa).name,
+          opis: rule.opis, zalecenie: rule.zalecenie || "",
+        }));
+    }
+  }
+
+  /* ---------- objawy: dobór leku OTC (port app/symptoms.py) ---------- */
+
+  class Symptoms {
+    constructor(raw) {
+      this.status = raw.status;
+      this.questions = raw.pytania;
+      this.items = raw.objawy.map((s) => ({ ...s, words: s.szukaj.split(" "), stems: new Set(s.rdzenie) }));
+      this.byId = new Map(this.items.map((s) => [s.id, s]));
+    }
+
+    search(query) {
+      const q = simple(query);
+      if (!q) return this.items;
+      const qWords = q.split(" ");
+      return this.items.filter((s) => qWords.every((qw) => s.words.some((w) => w.startsWith(qw)) || s.stems.has(stem(qw))));
+    }
+
+    optionItem(opt) {
+      return { label: opt.nazwa, atc: opt.atc || [], topical: opt.droga === "miejscowa",
+               substances: opt.tokeny.map((t, i) => [t, [t], opt.substancje[i]]) };
+    }
+
+    matches(opt, p) {
+      if (!p.active || !p.categories.includes("OTC")) return false;
+      if ((opt.droga === "ogolna" && p.topical) || (opt.droga === "miejscowa" && !p.topical)) return false;
+      if (opt.drogi && !p.routes.some((r) => opt.drogi.some((m) => r.toLowerCase().includes(m)))) return false;
+      if (opt.tokeny.length && p.substances.length === 1 && opt.tokeny.some((t) => p.substances[0].tokens.includes(t))) return true;
+      return Boolean(opt.atc && p.atc.some((c) => opt.atc.some((pre) => c.startsWith(pre))));
+    }
+
+    products(store, opt) {
+      const out = [...store.products.values()].filter((p) => this.matches(opt, p));
+      return out.sort((a, b) => pyCompare(a.name.toLowerCase(), b.name.toLowerCase()) || pyCompare(a.strength, b.strength)
+        || pyCompare(a.form, b.form) || a.id - b.id);
+    }
+  }
+
   const ALCOHOL_ITEM = () => ({ label: "Alkohol", atc: [], topical: false,
                                 substances: [["alkohol", [stem("Alkohol")], "Alkohol (etanol)"]] });
 
@@ -389,5 +464,6 @@ const Engine = (() => {
     aliases = norm.aliasy;
   }
 
-  return { configure, simple, stem, substanceTokens, queryTokens, Store, Supplements, Interactions, PatientRules, ALCOHOL_ITEM };
+  return { configure, simple, stem, substanceTokens, queryTokens, Store, Supplements, Interactions, PatientRules,
+           DispensingRules, Symptoms, ALCOHOL_ITEM };
 })();

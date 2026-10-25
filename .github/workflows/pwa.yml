@@ -28,7 +28,7 @@ jobs:
           python-version: "3.12"
       - name: Testy
         run: |
-          pip install pytest
+          pip install pytest openpyxl
           python -m pytest -q
       - name: Pobranie rejestru i budowanie
         run: python -m pwa.build --pobierz

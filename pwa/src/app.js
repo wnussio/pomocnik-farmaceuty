@@ -11,7 +11,7 @@ const LEVEL_LABELS = {
 };
 const RPL_URL = "https://rejestry.ezdrowie.gov.pl/api/rpl/medicinal-products";
 
-let store, supplements, interactions, patientRules;
+let store, supplements, interactions, patientRules, dispensing, symptoms, refund;
 const detailShards = new Map();
 
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => (
@@ -38,6 +38,16 @@ async function getJSON(path) {
 }
 
 const badges = (cats) => (cats || []).map((c) => `<span class="badge${c === "OTC" ? " otc" : ""}">${esc(c)}</span>`).join("");
+
+const FREE_LABELS = { S: "bezpłatny dla seniorów 65+", DZ: "bezpłatny dla dzieci i młodzieży do 18 lat", C: "bezpłatny dla kobiet w ciąży" };
+const zl = (v) => `${v.toFixed(2).replace(".", ",")} zł`;
+
+function refundBadges(id) {
+  const r = refund.produkty[id];
+  if (!r) return "";
+  return `<span class="badge ref">${esc(r.min_doplata != null ? `Ref. od ${zl(r.min_doplata)}` : "Ref.")}</span>`
+    + r.bezplatny.map((c) => `<span class="badge free" title="${esc(FREE_LABELS[c])}">${esc(c)}</span>`).join("");
+}
 const substancesText = (p) => p.substances.map((s) => `${s.name}${s.text ? " " + s.text : ""}`).join(" + ");
 
 /* ---------- zakładki ---------- */
@@ -46,6 +56,7 @@ function showTab(name) {
   document.querySelectorAll(".nav").forEach((b) => b.classList.toggle("active", b.dataset.tab === name));
   document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("hidden", p.id !== `panel-${name}`));
   if (name === "lista") runCheck();
+  if (name === "objawy" && currentSymptom) openSymptom(currentSymptom);
   window.scrollTo(0, 0);
 }
 document.querySelectorAll(".nav").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
@@ -81,6 +92,7 @@ function renderList() {
   document.querySelectorAll("[data-add]").forEach((b) => markAddButton(b, isOnList(Number(b.dataset.add))));
   if (supplements) renderSupplements($("#supplement-q").value);
   if (!$("#panel-lista").classList.contains("hidden")) runCheck();
+  refreshSymptom();
 }
 $("#check-list").addEventListener("click", (e) => {
   const i = e.target.dataset.remove;
@@ -110,7 +122,7 @@ function productRow(p, extra = "") {
     <li class="result">
       <div class="main" data-open="${p.id}">
         <div class="name">${esc(p.name)} <span class="meta">${esc(p.strength)}</span></div>
-        <div class="meta">${esc(p.form)} · ${esc(p.holder)} ${badges(p.categories)}</div>
+        <div class="meta">${esc(p.form)} · ${esc(p.holder)} ${badges(p.categories)}${refundBadges(p.id)}</div>
         <div class="subs">${esc(substancesText(p))}</div>${extra}
       </div>
       <button type="button" class="add${on ? " on" : ""}" data-add="${p.id}" aria-label="${on ? "Na liście" : "Dodaj do listy"}">${on ? "✓" : "+"}</button>
@@ -131,12 +143,15 @@ function handleResultClick(e) {
 async function searchProducts(q) {
   if (store.isEanQuery(q) && !store.gtin) store.gtin = await getJSON("data/ean.json");
   const results = store.searchProducts(q);
+  const onlyRefunded = $("#p-refunded").checked;
+  const shown = onlyRefunded ? results.filter((p) => refund.produkty[p.id]) : results;
   $("#product-hint").classList.toggle("hidden", Boolean(q.trim()));
-  $("#product-results").innerHTML = q.trim() && !results.length
-    ? `<li class="empty">Nie znaleziono leku „${esc(q)}”.</li>`
-    : results.map((p) => productRow(p)).join("");
+  $("#product-results").innerHTML = q.trim() && !shown.length
+    ? `<li class="empty">Nie znaleziono ${onlyRefunded ? "refundowanego " : ""}leku „${esc(q)}”.</li>`
+    : shown.map((p) => productRow(p)).join("");
   return results;
 }
+$("#p-refunded").addEventListener("change", () => searchProducts($("#product-q").value));
 $("#product-q").addEventListener("input", debounce((e) => searchProducts(e.target.value)));
 $("#product-results").addEventListener("click", handleResultClick);
 
@@ -154,8 +169,9 @@ async function openCard(id) {
   const on = isOnList(id);
   $("#card-body").innerHTML = `
     <h2>${esc(p.name)}</h2>
-    <p class="sub">${esc(p.strength)} · ${esc(p.form)} ${badges(p.categories)}</p>
+    <p class="sub">${esc(p.strength)} · ${esc(p.form)} ${badges(p.categories)}${refundBadges(p.id)}</p>
     ${p.topical ? `<p class="notice" style="margin-top:10px">Lek o działaniu miejscowym.</p>` : ""}
+    ${dispensingSection(dispensing.check([store.checkItem(p)]), false)}
     <h3>Substancje czynne</h3>
     ${p.substances.map((s) => `
       <div class="subst"><span>${esc(s.name)}<span class="meta"> ${esc(s.text)}</span></span>
@@ -180,7 +196,8 @@ async function openCard(id) {
     <h3>Opakowania (${packages.length})</h3>
     ${packages.map(([gtin, cat, desc, parallel]) => `
       <div class="pkg">${esc(desc)} ${badges([cat].filter(Boolean))}
-        <div class="gtin">EAN ${esc(gtin)}${parallel ? ` · import równoległy: ${esc(parallel)}` : ""}</div></div>`).join("")}`;
+        <div class="gtin">EAN ${esc(gtin)}${parallel ? ` · import równoległy: ${esc(parallel)}` : ""}</div></div>`).join("")}
+    ${refundSection(packages)}`;
   $("#card-add").addEventListener("click", (e) => {
     addProduct(p);
     e.target.disabled = true;
@@ -205,6 +222,19 @@ window.addEventListener("popstate", () => {
   $("#card-sheet").classList.add("hidden");
   stopScanner();
 });
+
+function refundSection(packages) {
+  const rows = packages.map(([gtin, , desc]) => [gtin, desc, refund.opakowania[gtin.replace(/^0+/, "")]]).filter(([, , r]) => r);
+  if (!rows.length) return "";
+  return `<h3>Refundacja (lista MZ)</h3>${rows.map(([gtin, desc, r]) => `
+    <div class="refund"><strong>${esc(desc)}</strong> <span class="meta">EAN ${esc(gtin)}</span>
+      <div class="meta">Cena detaliczna ${esc(r.cena)} zł · limit ${esc(r.limit)} zł</div>
+      <table><thead><tr><th>Wskazania</th><th>Odpł.</th><th>Dopłata</th></tr></thead>
+        <tbody>${r.wskazania.map((w) => `<tr><td>${esc(w.zakres)}</td><td>${esc(w.odplatnosc)}</td><td>${esc(w.doplata)} zł</td></tr>`).join("")}</tbody></table>
+      ${Object.entries(r.bezplatny).map(([c, note]) => `<div class="meta"><span class="badge free">${esc(c)}</span> ${esc(FREE_LABELS[c])}${note ? ` – ${esc(note)}` : ""}</div>`).join("")}
+    </div>`).join("")}
+    <p class="hint">Kwoty z obwieszczenia MZ; dopłata zależy od wskazania na recepcie.</p>`;
+}
 
 /* ---------- skaner kodów ---------- */
 
@@ -384,6 +414,7 @@ function buildFilters() {
   eq.reference = null;
 }
 ["#f-strength", "#f-form", "#f-route"].forEach((s) => $(s).addEventListener("change", renderEquivalents));
+$("#f-refunded").addEventListener("change", () => { if (eq.keys.length) renderEquivalents(); });
 $("#f-combos").addEventListener("change", loadEquivalents);
 
 function renderEquivalents() {
@@ -391,7 +422,9 @@ function renderEquivalents() {
   const route = $("#f-route").value;
   const refKey = $("#f-strength").value;
   const ref = refKey ? JSON.parse(refKey) : null;
-  const list = eq.products.filter((p) => (!form || p.formGroup === form) && (!route || p.routes.includes(route)));
+  const onlyRefunded = $("#f-refunded").checked;
+  const list = eq.products.filter((p) => (!form || p.formGroup === form) && (!route || p.routes.includes(route))
+    && (!onlyRefunded || refund.produkty[p.id]));
   if (!list.length) { $("#eq-results").innerHTML = `<p class="empty">Brak leków spełniających kryteria.</p>`; return; }
   const withDist = list.map((p) => ({ p, d: ref ? distance(signatureOf(p), ref) : 0 }))
     .sort((a, b) => a.d - b.d || a.p.name.localeCompare(b.p.name, "pl"));
@@ -461,6 +494,7 @@ function savePatient() {
   try { localStorage.setItem(PATIENT_KEY, JSON.stringify(patient)); } catch { /* brak pamięci lokalnej */ }
   renderPatient();
   runCheck();
+  refreshSymptom();
 }
 
 function renderPatient() {
@@ -480,16 +514,124 @@ $("#p-age").addEventListener("change", (e) => { patient.wiek = e.target.value; s
 $("#p-pregnant").addEventListener("change", (e) => { patient.ciaza = e.target.checked; savePatient(); });
 $("#p-breastfeeding").addEventListener("change", (e) => { patient.karmienie = e.target.checked; savePatient(); });
 
-function warningCard(w) {
+// Ostrzeżenie dotyczące jednej pozycji (pacjent, wydanie). withDrug=false – gdy pozycja jest oczywista (karta leku).
+function warningCard(w, withDrug = true) {
   const subs = w.substancje.join(", ");
   return `
     <article class="ix ${w.poziom}">
       <div class="ix-level">${esc(LEVEL_LABELS[w.poziom])} · ${esc(w.tytul)}</div>
-      <div class="ix-drugs">${esc(w.lek)} <span class="s">(${esc(subs === w.lek ? "suplement diety" : subs)})</span></div>
+      ${withDrug ? `<div class="ix-drugs">${esc(w.lek)} <span class="s">(${esc(subs === w.lek ? "suplement diety" : subs)})</span></div>` : ""}
       <div class="ix-title">${esc(w.grupa)}</div>
       <p>${esc(w.opis)}</p>
       ${w.zalecenie ? `<p class="advice">Zalecenie: ${esc(w.zalecenie)}</p>` : ""}
     </article>`;
+}
+
+function ixCard(w) {
+  return `
+    <article class="ix ${w.poziom}">
+      <div class="ix-level">${esc(LEVEL_LABELS[w.poziom])}</div>
+      <div class="ix-drugs">${w.leki.map((l) => {
+        const subs = l.substancje.join(", ");
+        return `${esc(l.nazwa)} <span class="s">(${esc(subs === l.nazwa ? "suplement diety" : subs)})</span>`;
+      }).join(" + ")}</div>
+      <div class="ix-title">${esc(w.tytul)}</div>
+      <p>${esc(w.opis)}</p>
+      ${w.zalecenie ? `<p class="advice">Zalecenie: ${esc(w.zalecenie)}</p>` : ""}
+    </article>`;
+}
+
+function dispensingSection(warnings, withDrug = true) {
+  if (!warnings.length) return "";
+  return `<h3>Przy wydaniu: pojazdy, słońce, żywność</h3>${warnings.map((w) => warningCard(w, withDrug)).join("")}`;
+}
+
+/* ---------- objawy: dobór leku bez recepty (nie jest poradą medyczną) ---------- */
+
+let currentSymptom = null;
+const LEVEL_RANK = { przeciwwskazane: 0, istotna: 1, niewielka: 2 };
+
+function renderSymptomList(q) {
+  const box = $("#symptom-list");
+  box.classList.toggle("hidden", Boolean(currentSymptom));
+  const list = symptoms.search(q);
+  if (!list.length) { box.innerHTML = `<p class="empty">Nie znaleziono objawu „${esc(q)}”.</p>`; return; }
+  box.innerHTML = [...new Set(list.map((s) => s.kategoria))].map((c) => `
+    <h3 class="group-title">${esc(c)}</h3>
+    <div class="symptom-chips">${list.filter((s) => s.kategoria === c).map((s) => `
+      <button type="button" class="symptom-chip" data-symptom="${esc(s.id)}">${esc(s.nazwa)}</button>`).join("")}</div>`).join("");
+}
+$("#symptom-q").addEventListener("input", debounce((e) => {
+  currentSymptom = null;
+  $("#symptom-card").innerHTML = "";
+  renderSymptomList(e.target.value);
+}));
+$("#symptom-list").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-symptom]");
+  if (b) { openSymptom(b.dataset.symptom); window.scrollTo(0, 0); }
+});
+
+function optionStatus(levels) {
+  if (levels.includes("przeciwwskazane")) return ["przeciwwskazane", "Przeciwwskazane / unikać – dla pacjenta lub z lekami z listy"];
+  if (levels.includes("istotna")) return ["istotna", "Uwaga – ostrzeżenia dla pacjenta lub z lekami z listy"];
+  if (levels.length) return ["niewielka", "Ostrzeżenia informacyjne"];
+  return ["ok", "Brak ostrzeżeń w bazie dla pacjenta i listy – sprawdź ChPL"];
+}
+
+function optionCard(o, items) {
+  const item = symptoms.optionItem(o);
+  const ix = interactions.check([...items, item]).wyniki.filter((r) => r.pozycje.includes(items.length))
+    .sort((a, b) => LEVEL_RANK[a.poziom] - LEVEL_RANK[b.poziom]);
+  const pat = patientRules.check([item], patient);
+  const disp = dispensing.check([item]);
+  const [status, label] = optionStatus([...ix, ...pat].map((w) => w.poziom));
+  const products = symptoms.products(store, o);
+  const first = products.slice(0, 3), rest = products.slice(3);
+  return `
+    <article class="option ${status}">
+      <h3>${esc(o.nazwa)}</h3><span class="pill ${status}">${esc(label)}</span>
+      ${o.uwagi ? `<p class="option-note">${esc(o.uwagi)}</p>` : ""}
+      ${ix.length ? `<div class="option-block"><div class="option-block-title">Interakcje z lekami z listy</div>${ix.map(ixCard).join("")}</div>` : ""}
+      ${pat.length ? `<div class="option-block"><div class="option-block-title">Pacjent: ${esc(patientRules.profileLabel(patient))}</div>${pat.map((w) => warningCard(w, false)).join("")}</div>` : ""}
+      ${disp.length ? `<details class="option-block"><summary>Przy wydaniu: ${esc([...new Set(disp.map((w) => w.tytul))].join(", "))} (${disp.length})</summary>
+        ${disp.map((w) => warningCard(w, false)).join("")}</details>` : ""}
+      ${products.length ? `<ul class="results">${first.map((p) => productRow(p)).join("")}</ul>
+        ${rest.length ? `<details><summary>Pokaż wszystkie leki OTC (${products.length})</summary><ul class="results">${rest.map((p) => productRow(p)).join("")}</ul></details>` : ""}`
+        : `<p class="empty">Brak leków OTC z tą substancją w rejestrze.</p>`}
+    </article>`;
+}
+
+function openSymptom(id) {
+  currentSymptom = id;
+  renderSymptomList($("#symptom-q").value);
+  const s = symptoms.byId.get(id);
+  const items = checkItems();
+  const context = [patientRules.profileLabel(patient) || "dorosły bez dodatkowych ustawień",
+                   checkList.length ? `pozycje na liście: ${checkList.length}` : "lista leków pusta"].join(" · ");
+  $("#symptom-card").innerHTML = `
+    <button type="button" class="btn btn-link" id="symptom-back">← wszystkie objawy</button>
+    <h2>${esc(s.nazwa)}</h2>
+    <details class="questions"><summary>Najpierw zapytaj pacjenta</summary>
+      <ul>${symptoms.questions.map((q) => `<li>${esc(q)}</li>`).join("")}</ul></details>
+    <div class="red-flags">
+      <div class="red-flags-title">Skieruj do lekarza (nie dobieraj leku samodzielnie), jeśli:</div>
+      <ul>${s.alarmowe.map((a) => `<li>${esc(a)}</li>`).join("")}</ul>
+    </div>
+    <p class="hint">Sprawdzono dla: ${esc(context)}. Ustaw pacjenta i dodaj leki przyjmowane na stałe w zakładce „Lista”.</p>
+    <h2 style="margin-top:16px">Możliwe leki bez recepty</h2>
+    ${s.opcje.map((o) => optionCard(o, items)).join("")}
+    ${s.porady.length ? `<h2 style="margin-top:16px">Postępowanie bez leków</h2><ul class="tips">${s.porady.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+    <p class="disclaimer">To nie jest porada medyczna. Dawkowanie, przeciwwskazania i ograniczenia wiekowe – zawsze według ChPL / ulotki konkretnego produktu.</p>`;
+  $("#symptom-back").addEventListener("click", () => {
+    currentSymptom = null;
+    $("#symptom-card").innerHTML = "";
+    renderSymptomList($("#symptom-q").value);
+  });
+}
+$("#symptom-card").addEventListener("click", handleResultClick);
+
+function refreshSymptom() {
+  if (symptoms && currentSymptom && !$("#panel-objawy").classList.contains("hidden")) openSymptom(currentSymptom);
 }
 
 /* ---------- interakcje ---------- */
@@ -506,14 +648,15 @@ function checkItems() {
 function runCheck() {
   const box = $("#interaction-results");
   if (!store) return;
-  if (checkList.length < (patientActive() ? 1 : 2)) {
-    box.innerHTML = `<p class="empty">Dodaj co najmniej dwie pozycje – interakcje sprawdzą się automatycznie.
-      Ostrzeżenia dla dziecka, w ciąży lub w okresie karmienia działają już dla jednej pozycji.</p>`;
+  if (!checkList.length) {
+    box.innerHTML = `<p class="empty">Dodaj leki do listy – sprawdzą się automatycznie. Interakcje od dwóch pozycji;
+      ostrzeżenia dla pacjenta i przy wydaniu (pojazdy, słońce, żywność) – już dla jednej.</p>`;
     return;
   }
   const items = checkItems();
   const data = interactions.check(items);
   const warnings = patientRules.check(items, patient);
+  const dispensingWarnings = dispensing.check(items);
   const counts = { przeciwwskazane: 0, istotna: 0, niewielka: 0 };
   [...data.wyniki, ...warnings].forEach((w) => { counts[w.poziom]++; });
   const patientBlock = patientActive() ? `
@@ -528,18 +671,10 @@ function runCheck() {
     ${patientBlock}
     ${checkList.length < 2 ? "" : `<h2 style="margin-top:18px">Interakcje</h2>
     ${data.uwagi.map((u) => `<p class="notice">${esc(u)}</p>`).join("")}
-    ${data.wyniki.map((w) => `
-      <article class="ix ${w.poziom}">
-        <div class="ix-level">${esc(LEVEL_LABELS[w.poziom])}</div>
-        <div class="ix-drugs">${w.leki.map((l) => {
-          const subs = l.substancje.join(", ");
-          return `${esc(l.nazwa)} <span class="s">(${esc(subs === l.nazwa ? "suplement diety" : subs)})</span>`;
-        }).join(" + ")}</div>
-        <div class="ix-title">${esc(w.tytul)}</div>
-        <p>${esc(w.opis)}</p>
-        ${w.zalecenie ? `<p class="advice">Zalecenie: ${esc(w.zalecenie)}</p>` : ""}
-      </article>`).join("")
+    ${data.wyniki.map(ixCard).join("")
       || `<div class="ok-box">Brak znanych interakcji w bazie aplikacji dla ${checkList.length} pozycji. Sprawdź ChPL.</div>`}`}
+    ${dispensingWarnings.length ? `<h2 style="margin-top:18px">Przy wydaniu: pojazdy, słońce, żywność</h2>
+      ${dispensingWarnings.map((w) => warningCard(w)).join("")}` : ""}
     <p class="hint">Baza: ${data.baza.liczba_regul} reguł, ${data.baza.liczba_grup} grup. ${esc(data.baza.status)}</p>`;
 }
 
@@ -547,21 +682,28 @@ function runCheck() {
 
 async function init() {
   try {
-    const [norm, leki, inter, supp, pac] = await Promise.all([
+    const [norm, leki, inter, supp, pac, ostrz, obj, ref] = await Promise.all([
       getJSON("data/normalizacja.json"), getJSON("data/leki.json"),
       getJSON("data/interakcje.json"), getJSON("data/suplementy.json"), getJSON("data/pacjent.json"),
+      getJSON("data/ostrzezenia.json"), getJSON("data/objawy.json"), getJSON("data/refundacja.json"),
     ]);
     Engine.configure(norm);
     store = new Engine.Store(leki);
     interactions = new Engine.Interactions(inter);
     supplements = new Engine.Supplements(supp);
     patientRules = new Engine.PatientRules(pac, interactions);
+    dispensing = new Engine.DispensingRules(ostrz, patientRules);
+    symptoms = new Engine.Symptoms(obj);
+    refund = ref;
   } catch (err) {
     $("#status").textContent = `Nie udało się wczytać bazy (${err.message}). Sprawdź połączenie i odśwież.`;
     return;
   }
-  $("#status").textContent = `Rejestr leków – stan na ${store.meta.stan_na_dzien} · ${store.products.size} leków`;
+  const refundDate = (refund.obwieszczenie.match(/na (\d+ \S+ \d{4})/) || [])[1];
+  $("#status").textContent = `Rejestr leków – stan na ${store.meta.stan_na_dzien} · ${store.products.size} leków`
+    + (refundDate ? ` · refundacja na ${refundDate}` : "");
   initPatient();
+  renderSymptomList("");
   renderList();
   renderSupplements("");
   loadEquivalents();

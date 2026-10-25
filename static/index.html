@@ -19,14 +19,16 @@
   </header>
 
   <div class="disclaimer" role="note">
-    Narzędzie pomocnicze o charakterze informacyjnym. Nie zastępuje Charakterystyki Produktu Leczniczego
-    ani oceny farmaceuty/lekarza. Tabela interakcji jest wersją startową i wymaga weryfikacji.
+    Wersja testowa. Narzędzie pomocnicze o charakterze informacyjnym – <strong>nie jest poradą medyczną</strong>.
+    Nie zastępuje Charakterystyki Produktu Leczniczego ani oceny farmaceuty/lekarza. Tabele interakcji, ostrzeżeń
+    i objawów są wersją startową i wymagają weryfikacji.
   </div>
 
   <div class="layout">
     <main>
       <nav class="tabs" role="tablist">
         <button role="tab" class="tab active" data-tab="lek">Wyszukaj lek</button>
+        <button role="tab" class="tab" data-tab="objawy">Objawy</button>
         <button role="tab" class="tab" data-tab="zamienniki">Zamienniki</button>
         <button role="tab" class="tab" data-tab="suplementy">Suplementy</button>
         <button role="tab" class="tab" data-tab="interakcje">Interakcje <span class="count" id="tab-count"></span></button>
@@ -39,10 +41,27 @@
           <input id="product-q" type="search" autocomplete="off" autofocus
                  placeholder="Nazwa leku lub kod EAN (np. apap, ketonal, 5909990…)">
         </label>
+        <label class="ref-toggle"><input type="checkbox" id="p-refunded"> Ref. tylko refundowane</label>
         <div class="split">
           <ul class="results" id="product-results"></ul>
           <div id="product-card" class="card-slot"></div>
         </div>
+      </section>
+
+      <!-- Objawy: dobór leku bez recepty -->
+      <section class="panel hidden" id="panel-objawy">
+        <div class="medical-warning" role="note">
+          <strong>To nie jest porada medyczna ani diagnoza.</strong> Podpowiedzi pomagają farmaceucie dobrać lek
+          bez recepty w rozmowie z pacjentem – tak jak w aptece. Decyzję podejmuje farmaceuta, a przy objawach
+          alarmowych, wątpliwościach lub braku poprawy pacjent powinien zgłosić się do lekarza.
+        </div>
+        <label class="search">
+          <span class="visually-hidden">Objaw</span>
+          <input id="symptom-q" type="search" autocomplete="off"
+                 placeholder="Objaw (np. ból głowy, kaszel, biegunka, katar)">
+        </label>
+        <div id="symptom-list"></div>
+        <div id="symptom-card"></div>
       </section>
 
       <!-- 2. Zamienniki -->
@@ -56,6 +75,7 @@
           <ul class="suggestions hidden" id="substance-suggestions"></ul>
         </div>
         <div class="chips" id="substance-chips"></div>
+        <label class="ref-toggle"><input type="checkbox" id="f-refunded"> Ref. tylko refundowane</label>
         <div class="filters hidden" id="eq-filters">
           <label>Moc odniesienia <select id="f-strength"></select></label>
           <label>Postać <select id="f-form"></select></label>
@@ -96,9 +116,10 @@
         <label class="check"><input type="checkbox" id="p-pregnant"> ciąża</label>
         <label class="check"><input type="checkbox" id="p-breastfeeding"> karmienie piersią</label>
       </fieldset>
+      <p class="hint">Ustawienia pacjenta i lista leków są uwzględniane także w podpowiedziach przy objawach.</p>
       <ul class="check-list" id="check-list"></ul>
       <button class="btn btn-ghost btn-small" id="add-alcohol" type="button">+ Alkohol</button>
-      <button class="btn btn-primary" id="check-btn" type="button">Sprawdź interakcje</button>
+      <button class="btn btn-primary" id="check-btn" type="button">Sprawdź interakcje i ostrzeżenia</button>
       <p class="hint">Lista jest przechowywana tylko w tej przeglądarce. Nie wpisuj danych pacjenta.</p>
     </aside>
   </div>

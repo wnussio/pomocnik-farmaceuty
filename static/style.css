@@ -235,7 +235,61 @@ select {
 .supp-grid .result { cursor: default; }
 .supp-grid .result.on-list { border-color: var(--accent); background: var(--accent-soft); }
 
+/* filtr: tylko refundowane */
+.ref-toggle {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 4px 12px 4px 8px; cursor: pointer;
+  border-radius: 999px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; user-select: none;
+}
+.ref-toggle input { margin: 0; accent-color: var(--accent); }
+.ref-toggle:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+
 .toast {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 50;
   background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-size: 14px;
 }
+
+/* refundacja */
+.badge.ref { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+.badge.free { background: var(--yellow-soft); color: var(--yellow); border-color: transparent; }
+.refund { padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; }
+.refund-head { margin-bottom: 2px; }
+.refund .meta { font-size: 13px; color: var(--muted); margin: 2px 0 6px; }
+
+/* objawy */
+.medical-warning {
+  padding: 12px 14px; border-radius: var(--radius); margin-bottom: 14px; font-size: 14px;
+  background: var(--red-soft); color: var(--text); border: 1px solid var(--red); border-left-width: 5px;
+}
+.medical-warning.small { font-size: 13px; margin-top: 16px; }
+.symptom-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.symptom-chip {
+  font: inherit; font-size: 14px; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  background: var(--surface); color: var(--text); border: 1px solid var(--border);
+}
+.symptom-chip:hover { border-color: var(--accent); color: var(--accent); }
+.symptom-title { margin: 6px 0 10px; }
+.questions { margin-bottom: 10px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.questions summary { cursor: pointer; font-weight: 600; }
+.questions ul, .red-flags ul, .tips { margin: 8px 0 0; padding-left: 20px; }
+.questions li, .red-flags li, .tips li { margin: 3px 0; }
+.red-flags {
+  padding: 12px 14px; border-radius: var(--radius); margin-bottom: 10px;
+  background: var(--red-soft); border: 1px solid var(--border); border-left: 5px solid var(--red);
+}
+.red-flags-title { font-weight: 700; color: var(--red); }
+.option {
+  background: var(--surface); border: 1px solid var(--border); border-left-width: 5px; border-radius: var(--radius);
+  padding: 12px 14px; margin-bottom: 12px;
+}
+.option.ok { border-left-color: var(--accent); }
+.option.niewielka { border-left-color: var(--yellow); }
+.option.istotna { border-left-color: var(--orange); }
+.option.przeciwwskazane { border-left-color: var(--red); }
+.option-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.option-head h4 { margin: 0; font-size: 16px; }
+.pill.ok { background: var(--accent-soft); color: var(--accent); }
+.option-note { margin: 6px 0 8px; font-size: 14px; color: var(--muted); }
+.option-block { margin: 8px 0; }
+.option-block-title, .option-block > summary { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 6px; cursor: pointer; }
+.option details > summary { cursor: pointer; font-size: 13px; color: var(--accent); margin: 6px 0; }
+.option .results { margin-top: 8px; }

@@ -1,0 +1,551 @@
+{
+  "_opis": "Dobór leku bez recepty (OTC) do zgłaszanego objawu – jak w rozmowie z farmaceutą. NIE jest to porada medyczna ani diagnoza. Objaw: 'alarmowe' (objawy wymagające skierowania do lekarza – pokazywane jako pierwsze), 'opcje' (substancje: 'substancje' – jednoskładnikowe leki z tą substancją, nazwy alternatywne, jedno słowo identyfikujące; i/lub 'atc' – prefiksy kodów ATC, także preparaty złożone; opcjonalnie 'droga': ogolna | miejscowa oraz 'drogi' – fragmenty nazw dróg podania z rejestru, np. [\"pochw\"]), 'porady' (postępowanie niefarmakologiczne). Pokazywane są wyłącznie leki z kategorią OTC w rejestrze.",
+  "status": "Wersja testowa – do weryfikacji przez farmaceutę. To nie jest porada medyczna: decyzję o wydaniu leku podejmuje farmaceuta po rozmowie z pacjentem, a przy objawach alarmowych lub braku poprawy pacjent powinien zgłosić się do lekarza.",
+  "pytania": [
+    "Kto jest pacjentem? Wiek, ciąża, karmienie piersią (ustaw w polu „Pacjent”).",
+    "Jakie dokładnie są objawy i od kiedy trwają?",
+    "Co pacjent już przyjął na te objawy i z jakim skutkiem?",
+    "Jakie inne leki i suplementy przyjmuje na stałe (dodaj je do listy – podpowiedzi zostaną sprawdzone pod kątem interakcji)?",
+    "Czy ma choroby przewlekłe (np. nadciśnienie, choroba wrzodowa, astma, cukrzyca, choroby nerek lub wątroby) albo alergie na leki?"
+  ],
+  "objawy": [
+    {
+      "id": "bol_glowy", "nazwa": "Ból głowy", "kategoria": "Ból i gorączka", "szukaj": ["głowa", "napięciowy"],
+      "alarmowe": [
+        "Nagły, bardzo silny ból („najsilniejszy w życiu”)",
+        "Ból z gorączką, sztywnością karku lub wysypką",
+        "Ból po urazie głowy",
+        "Zaburzenia widzenia, mowy, drętwienie lub osłabienie kończyn, splątanie",
+        "Nowy rodzaj bólu po 50. roku życia albo ból narastający, budzący ze snu, z wymiotami",
+        "Ból głowy w ciąży (możliwe nadciśnienie)",
+        "Leki przeciwbólowe przyjmowane ponad 10–15 dni w miesiącu (ryzyko bólu polekowego)"
+      ],
+      "opcje": [
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Dobrze tolerowany przez żołądek; pierwszy wybór w ciąży. Pilnować maksymalnej dawki dobowej i dublowania z lekami złożonymi na przeziębienie."},
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Skuteczny w bólu napięciowym; unikać przy chorobie wrzodowej, astmie aspirynowej, w III trymestrze ciąży i z lekami przeciwkrzepliwymi."},
+        {"nazwa": "Kwas acetylosalicylowy", "substancje": ["Acidum acetylsalicylicum"], "droga": "ogolna", "uwagi": "Nie u dzieci i młodzieży poniżej 16 lat; ostrożnie z lekami przeciwkrzepliwymi."},
+        {"nazwa": "Naproksen", "substancje": ["Naproxenum"], "droga": "ogolna", "uwagi": "Dłuższe działanie; przeciwwskazania jak dla innych NLPZ."},
+        {"nazwa": "Metamizol", "substancje": ["Metamizolum"], "droga": "ogolna", "uwagi": "Krótko; rzadkie, ale groźne ryzyko agranulocytozy – przy gorączce, bólu gardła lub owrzodzeniach jamy ustnej w trakcie stosowania przerwać i zgłosić się do lekarza."}
+      ],
+      "porady": ["Nawodnienie, regularny sen i posiłki.", "Ograniczyć kofeinę i alkohol, przerwy od ekranu.", "Przy częstych bólach – dzienniczek bólu i konsultacja lekarska."]
+    },
+    {
+      "id": "migrena", "nazwa": "Migrena (rozpoznana wcześniej przez lekarza)", "kategoria": "Ból i gorączka", "szukaj": ["aura", "napad"],
+      "alarmowe": [
+        "Pierwszy w życiu napad lub zmiana charakteru bólu",
+        "Aura trwająca ponad godzinę albo osłabienie połowy ciała",
+        "Napad po 50. roku życia",
+        "Ból nieustępujący ponad 72 godziny",
+        "Napady coraz częstsze mimo leczenia"
+      ],
+      "opcje": [
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Przyjąć jak najwcześniej po rozpoczęciu napadu."},
+        {"nazwa": "Kwas acetylosalicylowy", "substancje": ["Acidum acetylsalicylicum"], "droga": "ogolna", "uwagi": "Przyjąć na początku napadu; nie poniżej 16 lat."},
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Słabszy w migrenie niż NLPZ; opcja w ciąży."},
+        {"nazwa": "Tryptany bez recepty (almotryptan)", "atc": ["N02CC"], "uwagi": "Tylko przy migrenie rozpoznanej przez lekarza, zwykle 18–65 lat. Przeciwwskazane przy chorobie wieńcowej, po udarze i przy niekontrolowanym nadciśnieniu; uważać na leki serotoninergiczne."}
+      ],
+      "porady": ["Odpoczynek w ciemnym, cichym pomieszczeniu.", "Dzienniczek napadów i czynników wyzwalających."]
+    },
+    {
+      "id": "goraczka", "nazwa": "Gorączka", "kategoria": "Ból i gorączka", "szukaj": ["temperatura", "stan podgorączkowy"],
+      "alarmowe": [
+        "Niemowlę poniżej 3 miesięcy z temperaturą 38 °C lub wyższą – pilnie do lekarza",
+        "Temperatura powyżej 39,5–40 °C lub nieustępująca po lekach",
+        "Gorączka trwająca ponad 3 dni",
+        "Sztywność karku, wysypka nieblednąca pod uciskiem, drgawki, splątanie, silna senność",
+        "Duszność, ból w klatce piersiowej, objawy odwodnienia",
+        "Gorączka po powrocie z tropików, u osoby z obniżoną odpornością lub w trakcie chemioterapii"
+      ],
+      "opcje": [
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "U dzieci dawka według masy ciała (ulotka). Dostępne czopki i zawiesiny."},
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "U dzieci zwykle od 3. miesiąca życia i powyżej 5 kg; dawka według masy ciała. Unikać przy odwodnieniu i ospie wietrznej."}
+      ],
+      "porady": ["Dużo płynów, lekkie ubranie, odpoczynek.", "Celem jest poprawa samopoczucia, nie „zbicie” temperatury do normy."]
+    },
+    {
+      "id": "bol_miesni", "nazwa": "Ból mięśni, stawów, stłuczenie, skręcenie", "kategoria": "Ból i gorączka", "szukaj": ["kontuzja", "uraz", "naciągnięcie", "stawy", "mięśnie"],
+      "alarmowe": [
+        "Uraz z deformacją, dużym obrzękiem lub niemożnością obciążenia kończyny",
+        "Staw gorący, zaczerwieniony, obrzęknięty – zwłaszcza z gorączką",
+        "Ból i obrzęk łydki (możliwa zakrzepica)",
+        "Ból promieniujący do klatki piersiowej, żuchwy lub lewego ramienia",
+        "Brak poprawy po 7 dniach"
+      ],
+      "opcje": [
+        {"nazwa": "Diklofenak na skórę (żel)", "drogi": ["skór"], "substancje": ["Diclofenacum"], "droga": "miejscowa", "uwagi": "Działa miejscowo, mniej działań ogólnoustrojowych; nie na uszkodzoną skórę."},
+        {"nazwa": "Ibuprofen na skórę (żel)", "drogi": ["skór"], "substancje": ["Ibuprofenum"], "droga": "miejscowa", "uwagi": "Nie na uszkodzoną skórę."},
+        {"nazwa": "Ibuprofen doustnie", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Krótko; przeciwwskazania jak dla NLPZ."},
+        {"nazwa": "Naproksen doustnie", "substancje": ["Naproxenum"], "droga": "ogolna", "uwagi": "Krótko; przeciwwskazania jak dla NLPZ."},
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Gdy NLPZ są przeciwwskazane."}
+      ],
+      "porady": ["Świeży uraz: odpoczynek, zimny okład (15–20 min), uniesienie kończyny.", "Ból przewlekły: ciepło, ruch, ćwiczenia."]
+    },
+    {
+      "id": "bol_plecow", "nazwa": "Ból pleców (krzyża)", "kategoria": "Ból i gorączka", "szukaj": ["kręgosłup", "lędźwie", "korzonki", "lumbago"],
+      "alarmowe": [
+        "Drętwienie krocza, zaburzenia oddawania moczu lub stolca – pilnie do lekarza",
+        "Narastające osłabienie lub drętwienie nóg",
+        "Gorączka, niezamierzona utrata masy ciała, nowotwór w wywiadzie",
+        "Ból po urazie (upadek, wypadek) albo u osoby z osteoporozą",
+        "Ból nocny, niezależny od ruchu, albo trwający ponad 4–6 tygodni",
+        "Ból z objawami ze strony układu moczowego (możliwe zapalenie nerek, kamica)"
+      ],
+      "opcje": [
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Krótko; przeciwwskazania jak dla NLPZ."},
+        {"nazwa": "Naproksen", "substancje": ["Naproxenum"], "droga": "ogolna", "uwagi": "Krótko; przeciwwskazania jak dla NLPZ."},
+        {"nazwa": "Diklofenak na skórę (żel)", "drogi": ["skór"], "substancje": ["Diclofenacum"], "droga": "miejscowa", "uwagi": "Alternatywa przy przeciwwskazaniach do NLPZ doustnie."},
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Słabsza skuteczność w bólu krzyża."}
+      ],
+      "porady": ["Pozostać aktywnym – leżenie w łóżku opóźnia powrót do zdrowia.", "Ciepło miejscowe."]
+    },
+    {
+      "id": "bol_menstruacyjny", "nazwa": "Bolesne miesiączkowanie", "kategoria": "Ból i gorączka", "szukaj": ["okres", "miesiączka", "menstruacja"],
+      "alarmowe": [
+        "Możliwa ciąża (opóźniona miesiączka) z bólem podbrzusza – wykluczyć ciążę pozamaciczną",
+        "Ból nagły, bardzo silny lub z gorączką",
+        "Krwawienie bardzo obfite, między miesiączkami lub po stosunku",
+        "Ból nowy po latach bez dolegliwości lub narastający z każdym cyklem",
+        "Brak poprawy po lekach przeciwbólowych"
+      ],
+      "opcje": [
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Najskuteczniejsze są NLPZ – zacząć z początkiem bólu lub krwawienia."},
+        {"nazwa": "Naproksen", "substancje": ["Naproxenum"], "droga": "ogolna", "uwagi": "Dłuższe działanie."},
+        {"nazwa": "Drotaweryna", "substancje": ["Drotaverinum"], "droga": "ogolna", "uwagi": "Rozkurczowo, można łączyć z lekiem przeciwbólowym."},
+        {"nazwa": "Butylobromek hioscyny", "substancje": ["Hyoscinum"], "droga": "ogolna", "uwagi": "Rozkurczowo; przeciwwskazany przy jaskrze z wąskim kątem i przeroście prostaty z zatrzymaniem moczu."},
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Gdy NLPZ są przeciwwskazane."}
+      ],
+      "porady": ["Ciepły okład na podbrzusze.", "Regularna aktywność fizyczna."]
+    },
+    {
+      "id": "bol_zeba", "nazwa": "Ból zęba (do czasu wizyty u dentysty)", "kategoria": "Ból i gorączka", "szukaj": ["ząb", "zęby", "dziąsło"],
+      "alarmowe": [
+        "Obrzęk twarzy, policzka lub pod żuchwą",
+        "Gorączka, trudności w otwieraniu ust lub połykaniu",
+        "Ból po urazie zęba"
+      ],
+      "opcje": [
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Zwykle najskuteczniejszy w bólu zęba."},
+        {"nazwa": "Naproksen", "substancje": ["Naproxenum"], "droga": "ogolna", "uwagi": "Dłuższe działanie."},
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Gdy NLPZ są przeciwwskazane."}
+      ],
+      "porady": ["Lek przeciwbólowy łagodzi objaw, ale nie leczy przyczyny – wizyta u dentysty.", "Nie przykładać ciepła do policzka."]
+    },
+
+    {
+      "id": "bol_gardla", "nazwa": "Ból gardła", "kategoria": "Przeziębienie, kaszel i alergia", "szukaj": ["gardło", "chrypka", "angina", "drapanie"],
+      "alarmowe": [
+        "Trudności w połykaniu śliny, ślinienie się, duszność, świst przy oddychaniu",
+        "Szczękościsk, jednostronny obrzęk gardła lub szyi (możliwy ropień)",
+        "Wysoka gorączka bez kaszlu i kataru, naloty na migdałkach, powiększone węzły chłonne (możliwa angina paciorkowcowa)",
+        "Wysypka",
+        "Ból gardła trwający ponad tydzień albo chrypka ponad 3 tygodnie",
+        "Ból gardła w trakcie leczenia metamizolem, tyreostatykami lub chemioterapią (ryzyko agranulocytozy)"
+      ],
+      "opcje": [
+        {"nazwa": "Benzydamina (spray, tabletki do ssania)", "drogi": ["ustn", "gardł", "dziąs"], "substancje": ["Benzydaminum"], "droga": "miejscowa", "uwagi": "Działa przeciwbólowo i przeciwzapalnie miejscowo."},
+        {"nazwa": "Flurbiprofen (tabletki do ssania, spray)", "drogi": ["ustn", "gardł", "dziąs"], "substancje": ["Flurbiprofenum"], "droga": "miejscowa", "uwagi": "NLPZ miejscowo – przeciwwskazania podobne do innych NLPZ (astma aspirynowa)."},
+        {"nazwa": "Preparaty antyseptyczne do gardła", "atc": ["R02AA"], "uwagi": "Tabletki do ssania i spraye z antyseptykami (często z miejscowym środkiem znieczulającym)."},
+        {"nazwa": "Paracetamol", "substancje": ["Paracetamolum"], "droga": "ogolna", "uwagi": "Przy towarzyszącej gorączce."},
+        {"nazwa": "Ibuprofen", "substancje": ["Ibuprofenum"], "droga": "ogolna", "uwagi": "Przy towarzyszącej gorączce; przeciwwskazania jak dla NLPZ."}
+      ],
+      "porady": ["Ciepłe (nie gorące) napoje, nawilżanie powietrza.", "Większość bólów gardła ma przyczynę wirusową i ustępuje w ciągu tygodnia."]
+    },
+    {
+      "id": "katar", "nazwa": "Katar i zatkany nos (przeziębienie)", "kategoria": "Przeziębienie, kaszel i alergia", "szukaj": ["nos", "przeziębienie", "zatoki", "niedrożność"],
+      "alarmowe": [
+        "Objawy trwające ponad 10 dni albo pogorszenie po początkowej poprawie",
+        "Silny ból twarzy lub zębów górnych z gorączką powyżej 39 °C",
+        "Obrzęk lub zaczerwienienie wokół oka, zaburzenia widzenia",
+        "Jednostronna, cuchnąca lub krwista wydzielina",
+        "Niemowlę z katarem, które ma trudności z jedzeniem lub oddychaniem"
+      ],
+      "opcje": [
+        {"nazwa": "Ksylometazolina (krople, spray do nosa)", "drogi": ["nos"], "substancje": ["Xylometazolinum"], "droga": "miejscowa", "uwagi": "Maksymalnie 5–7 dni (ryzyko polekowego nieżytu nosa). Dawka dla dzieci – osobne preparaty."},
+        {"nazwa": "Oksymetazolina (krople, spray do nosa)", "drogi": ["nos"], "substancje": ["Oxymetazolinum"], "droga": "miejscowa", "uwagi": "Maksymalnie 5–7 dni; preparaty dla niemowląt w niższym stężeniu."},
+        {"nazwa": "Pseudoefedryna doustnie", "substancje": ["Pseudoephedrinum"], "droga": "ogolna", "uwagi": "Przeciwwskazana przy nadciśnieniu, chorobie wieńcowej, jaskrze, nadczynności tarczycy, z inhibitorami MAO; nie u dzieci poniżej 12 lat."}
+      ],
+      "porady": ["Płukanie nosa roztworem soli fizjologicznej lub wody morskiej (wyroby medyczne).", "Nawilżanie powietrza, nawodnienie."]
+    },
+    {
+      "id": "katar_alergiczny", "nazwa": "Katar sienny / alergiczny", "kategoria": "Przeziębienie, kaszel i alergia", "szukaj": ["alergia", "uczulenie", "pyłki", "kichanie", "sienny"],
+      "alarmowe": [
+        "Duszność, świszczący oddech, ucisk w klatce piersiowej (możliwa astma)",
+        "Obrzęk twarzy, warg lub języka",
+        "Objawy jednostronne albo z krwawieniem z nosa",
+        "Brak poprawy po 2 tygodniach leczenia"
+      ],
+      "opcje": [
+        {"nazwa": "Cetyryzyna", "substancje": ["Cetirizinum"], "droga": "ogolna", "uwagi": "Raz dziennie; u części osób senność."},
+        {"nazwa": "Lewocetyryzyna", "substancje": ["Levocetirizinum"], "droga": "ogolna", "uwagi": "Raz dziennie."},
+        {"nazwa": "Loratadyna", "substancje": ["Loratadinum"], "droga": "ogolna", "uwagi": "Raz dziennie, rzadko powoduje senność."},
+        {"nazwa": "Desloratadyna", "substancje": ["Desloratadinum"], "droga": "ogolna", "uwagi": "Raz dziennie, rzadko powoduje senność."},
+        {"nazwa": "Bilastyna", "substancje": ["Bilastinum"], "droga": "ogolna", "uwagi": "Na czczo (godzinę przed lub 2 godziny po posiłku, bez soków owocowych)."},
+        {"nazwa": "Feksofenadyna", "substancje": ["Fexofenadinum"], "droga": "ogolna", "uwagi": "Nie popijać sokami owocowymi; odstęp od leków zobojętniających."},
+        {"nazwa": "Glikokortykosteroid do nosa (mometazon, flutykazon)", "drogi": ["nos"], "substancje": ["Mometasonum", "Fluticasonum"], "droga": "miejscowa", "uwagi": "Najskuteczniejszy na zatkany nos; pełne działanie po kilku dniach regularnego stosowania."},
+        {"nazwa": "Azelastyna do nosa", "drogi": ["nos"], "substancje": ["Azelastinum"], "droga": "miejscowa", "uwagi": "Szybkie działanie; gorzki smak."},
+        {"nazwa": "Kromoglikan sodu do nosa", "drogi": ["nos"], "substancje": ["Cromoglicas"], "droga": "miejscowa", "uwagi": "Działa zapobiegawczo – stosować regularnie przed sezonem pylenia."}
+      ],
+      "porady": ["Ograniczyć kontakt z alergenem (zamknięte okna w szczycie pylenia, prysznic po powrocie do domu).", "Płukanie nosa solą fizjologiczną."]
+    },
+    {
+      "id": "oczy_alergia", "nazwa": "Swędzące, łzawiące oczy (alergia)", "kategoria": "Przeziębienie, kaszel i alergia", "szukaj": ["oko", "oczy", "spojówki", "zapalenie spojówek"],
+      "alarmowe": [
+        "Ból oka, światłowstręt, pogorszenie widzenia",
+        "Ropna wydzielina, sklejone powieki",
+        "Zaczerwienienie u osoby noszącej soczewki kontaktowe",
+        "Uraz, ciało obce, substancja chemiczna w oku",
+        "Objawy tylko w jednym oku"
+      ],
+      "opcje": [
+        {"nazwa": "Ketotyfen (krople do oczu)", "drogi": ["oka", "oczu"], "substancje": ["Ketotifenum"], "droga": "miejscowa", "uwagi": "Wyjąć soczewki kontaktowe przed zakropleniem."},
+        {"nazwa": "Olopatadyna (krople do oczu)", "drogi": ["oka", "oczu"], "substancje": ["Olopatadinum"], "droga": "miejscowa", "uwagi": "Wyjąć soczewki kontaktowe przed zakropleniem."},
+        {"nazwa": "Kromoglikan sodu (krople do oczu)", "drogi": ["oka", "oczu"], "substancje": ["Cromoglicas"], "droga": "miejscowa", "uwagi": "Działa zapobiegawczo, stosować regularnie."},
+        {"nazwa": "Azelastyna (krople do oczu)", "drogi": ["oka", "oczu"], "substancje": ["Azelastinum"], "droga": "miejscowa", "uwagi": "Wyjąć soczewki kontaktowe przed zakropleniem."},
+        {"nazwa": "Lek przeciwhistaminowy doustnie (np. loratadyna, cetyryzyna)", "substancje": ["Loratadinum", "Desloratadinum", "Cetirizinum", "Levocetirizinum"], "droga": "ogolna", "uwagi": "Gdy objawom ocznym towarzyszy katar alergiczny."}
+      ],
+      "porady": ["Zimne okłady, sztuczne łzy (wyroby medyczne).", "Nie pocierać oczu."]
+    },
+    {
+      "id": "kaszel_suchy", "nazwa": "Kaszel suchy, męczący", "kategoria": "Przeziębienie, kaszel i alergia", "szukaj": ["kaszel", "drapanie", "napadowy"],
+      "alarmowe": [
+        "Kaszel trwający ponad 3 tygodnie",
+        "Krwioplucie, duszność, świszczący oddech, ból w klatce piersiowej",
+        "Wysoka gorączka ponad 3 dni",
+        "Niezamierzona utrata masy ciała, poty nocne",
+        "Zmiana charakteru przewlekłego kaszlu u palacza",
+        "Nagły kaszel u dziecka po zakrztuszeniu (ciało obce)",
+        "Pacjent przyjmuje inhibitor ACE (np. ramipryl, perindopryl, enalapryl) – suchy kaszel może być działaniem niepożądanym leku"
+      ],
+      "opcje": [
+        {"nazwa": "Butamirat", "substancje": ["Butamiratum"], "droga": "ogolna", "uwagi": "Nie łączyć z lekami wykrztuśnymi."},
+        {"nazwa": "Dekstrometorfan", "substancje": ["Dextromethorphanum"], "droga": "ogolna", "uwagi": "Interakcje z lekami serotoninergicznymi (SSRI, IMAO) i inhibitorami CYP2D6; potencjał nadużywania."},
+        {"nazwa": "Lewodropropizyna", "substancje": ["Levodropropizinum"], "droga": "ogolna", "uwagi": "Nie łączyć z lekami wykrztuśnymi."}
+      ],
+      "porady": ["Nawilżanie powietrza, ciepłe napoje, miód (nie u dzieci poniżej 1. roku życia).", "Leki przeciwkaszlowe stosować głównie na noc, gdy kaszel utrudnia sen."]
+    },
+    {
+      "id": "kaszel_mokry", "nazwa": "Kaszel mokry (z wydzieliną)", "kategoria": "Przeziębienie, kaszel i alergia", "szukaj": ["kaszel", "flegma", "odkrztuszanie", "wydzielina"],
+      "alarmowe": [
+        "Kaszel trwający ponad 3 tygodnie",
+        "Krwista, rdzawa lub cuchnąca wydzielina",
+        "Duszność, świszczący oddech, ból w klatce piersiowej przy oddychaniu",
+        "Wysoka gorączka ponad 3 dni",
+        "Pacjent z POChP, astmą lub niewydolnością serca – zaostrzenie"
+      ],
+      "opcje": [
+        {"nazwa": "Ambroksol", "substancje": ["Ambroxolum"], "droga": "ogolna", "uwagi": "Ostatnią dawkę kilka godzin przed snem."},
+        {"nazwa": "Bromheksyna", "substancje": ["Bromhexinum"], "droga": "ogolna", "uwagi": "Ostatnią dawkę kilka godzin przed snem."},
+        {"nazwa": "Acetylocysteina", "substancje": ["Acetylcysteinum"], "droga": "ogolna", "uwagi": "Nie u dzieci poniżej 2 lat; odstęp od antybiotyków doustnych (ok. 2 godziny)."},
+        {"nazwa": "Karbocysteina", "substancje": ["Carbocisteinum"], "droga": "ogolna", "uwagi": "Nie u dzieci poniżej 2 lat; ostrożnie przy chorobie wrzodowej."},
+        {"nazwa": "Gwajafenezyna", "substancje": ["Guaifenesinum"], "droga": "ogolna", "uwagi": "Popijać dużą ilością płynów."},
+        {"nazwa": "Wyciąg z liści bluszczu", "substancje": ["Hederae"], "droga": "ogolna", "uwagi": "Lek roślinny; sprawdzić wiek w ulotce konkretnego preparatu."}
+      ],
+      "porady": ["Dużo płynów ułatwia odkrztuszanie.", "Nie łączyć leków wykrztuśnych z przeciwkaszlowymi."]
+    },
+
+    {
+      "id": "zgaga", "nazwa": "Zgaga, refluks, niestrawność", "kategoria": "Układ pokarmowy", "szukaj": ["pieczenie", "żołądek", "nadkwasota", "odbijanie"],
+      "alarmowe": [
+        "Trudności lub ból przy połykaniu, uczucie zatrzymywania się pokarmu",
+        "Wymioty krwią lub treścią „fusowatą”, czarne smoliste stolce",
+        "Niezamierzona utrata masy ciała, niedokrwistość",
+        "Pierwsze objawy po 50.–55. roku życia",
+        "Ból w klatce piersiowej przy wysiłku, promieniujący do ramienia lub żuchwy (możliwe serce)",
+        "Objawy trwające ponad 2 tygodnie mimo leczenia lub częste nawroty"
+      ],
+      "opcje": [
+        {"nazwa": "Leki zobojętniające (np. węglan wapnia + węglan magnezu)", "atc": ["A02A"], "uwagi": "Szybka, krótkotrwała ulga; odstęp 2 godziny od innych leków (zmniejszają ich wchłanianie)."},
+        {"nazwa": "Alginiany (np. Gaviscon)", "atc": ["A02BX"], "uwagi": "Tworzą warstwę ochronną; dobre przy refluksie, także w ciąży."},
+        {"nazwa": "Omeprazol / esomeprazol / pantoprazol", "substancje": ["Omeprazolum", "Esomeprazolum", "Pantoprazolum"], "droga": "ogolna", "uwagi": "Bez recepty u dorosłych maksymalnie 14 dni; pełne działanie po kilku dniach. Interakcje (np. klopidogrel)."},
+        {"nazwa": "Famotydyna", "substancje": ["Famotidinum"], "droga": "ogolna", "uwagi": "Przy sporadycznej zgadze."}
+      ],
+      "porady": ["Mniejsze posiłki, ostatni 3 godziny przed snem; uniesione wezgłowie łóżka.", "Ograniczyć alkohol, kawę, tłuste potrawy, palenie; redukcja masy ciała."]
+    },
+    {
+      "id": "wzdecia", "nazwa": "Wzdęcia, gazy", "kategoria": "Układ pokarmowy", "szukaj": ["gazy", "kolka", "brzuch"],
+      "alarmowe": [
+        "Silny ból brzucha, twardy brzuch, wymioty",
+        "Brak gazów i stolca (możliwa niedrożność)",
+        "Krew w stolcu, niezamierzona utrata masy ciała",
+        "Nowe, uporczywe objawy po 50. roku życia"
+      ],
+      "opcje": [
+        {"nazwa": "Symetykon / dimetykon", "substancje": ["Simeticonum", "Dimeticonum"], "droga": "ogolna", "uwagi": "Działa fizycznie w jelicie, praktycznie się nie wchłania; preparaty także dla niemowląt (kolka)."},
+        {"nazwa": "Preparaty ziołowe i inne na dolegliwości trawienne", "atc": ["A03AX"], "uwagi": "Sprawdzić skład – część zawiera alkohol."}
+      ],
+      "porady": ["Jeść powoli, ograniczyć napoje gazowane, gumę do żucia i produkty wzdymające."]
+    },
+    {
+      "id": "biegunka", "nazwa": "Biegunka", "kategoria": "Układ pokarmowy", "szukaj": ["rozwolnienie", "luźne stolce", "zatrucie"],
+      "alarmowe": [
+        "Krew lub śluz w stolcu, czarne stolce",
+        "Wysoka gorączka, silny ból brzucha",
+        "Objawy odwodnienia: suchość w ustach, mało moczu, zawroty głowy, senność",
+        "Niemowlę, małe dziecko, senior albo osoba z chorobą przewlekłą",
+        "Biegunka trwająca ponad 2–3 dni u dorosłego (u dzieci – krócej)",
+        "Biegunka w trakcie lub po antybiotykoterapii (możliwe zakażenie C. difficile)",
+        "Biegunka po powrocie z podróży do krajów tropikalnych"
+      ],
+      "opcje": [
+        {"nazwa": "Doustne płyny nawadniające (ORS)", "atc": ["A07CA"], "uwagi": "Podstawa leczenia, zwłaszcza u dzieci i seniorów. Wiele preparatów ORS to wyroby medyczne lub żywność – mogą nie być widoczne w rejestrze leków."},
+        {"nazwa": "Loperamid", "substancje": ["Loperamidum"], "droga": "ogolna", "uwagi": "Krótko; nie przy krwi w stolcu i wysokiej gorączce; ograniczenia wiekowe (zwykle od 12 lat bez recepty)."},
+        {"nazwa": "Racekadotryl", "substancje": ["Racecadotrilum"], "droga": "ogolna", "uwagi": "Zmniejsza wydzielanie wody do jelita; preparaty także dla dzieci."},
+        {"nazwa": "Diosmektyt", "substancje": ["Diosmectitum", "Diosmectiteum"], "droga": "ogolna", "uwagi": "Odstęp od innych leków (ok. 2 godziny)."},
+        {"nazwa": "Węgiel leczniczy", "substancje": ["Carbo"], "droga": "ogolna", "uwagi": "Odstęp od innych leków (ok. 2 godziny), w tym antykoncepcji hormonalnej."},
+        {"nazwa": "Probiotyki zarejestrowane jako leki (np. Saccharomyces boulardii)", "atc": ["A07FA"], "uwagi": "Przy biegunce poantybiotykowej i infekcyjnej."},
+        {"nazwa": "Nifuroksazyd", "substancje": ["Nifuroxazidum"], "droga": "ogolna", "uwagi": "Przy podejrzeniu biegunki bakteryjnej; nie zastępuje nawadniania."}
+      ],
+      "porady": ["Nawadnianie małymi porcjami, często.", "Lekkostrawna dieta, nie głodzić dziecka; higiena rąk."]
+    },
+    {
+      "id": "zaparcie", "nazwa": "Zaparcie", "kategoria": "Układ pokarmowy", "szukaj": ["zatwardzenie", "stolec", "wypróżnienie"],
+      "alarmowe": [
+        "Krew w stolcu, czarne stolce",
+        "Nagła zmiana rytmu wypróżnień po 50. roku życia",
+        "Niezamierzona utrata masy ciała, niedokrwistość",
+        "Silny ból brzucha, wymioty, brak gazów (możliwa niedrożność)",
+        "Zaparcie trwające ponad 2 tygodnie mimo leczenia",
+        "Zaparcie po rozpoczęciu nowego leku (np. opioidy, żelazo, werapamil)"
+      ],
+      "opcje": [
+        {"nazwa": "Makrogol", "substancje": ["Macrogolum"], "droga": "ogolna", "uwagi": "Działa po 1–3 dniach; dobry do dłuższego stosowania, także u dzieci (preparaty pediatryczne)."},
+        {"nazwa": "Laktuloza", "substancje": ["Lactulosum"], "droga": "ogolna", "uwagi": "Działa po 1–3 dniach; na początku może powodować wzdęcia."},
+        {"nazwa": "Bisakodyl", "substancje": ["Bisacodylum"], "droga": "ogolna", "uwagi": "Działa po 6–12 godzinach (czopki – szybciej); krótko, nie stosować przewlekle."},
+        {"nazwa": "Senes", "substancje": ["Sennae"], "droga": "ogolna", "uwagi": "Krótko (do 1–2 tygodni); nie w ciąży i u dzieci poniżej 12 lat."},
+        {"nazwa": "Czopki glicerynowe", "substancje": ["Glycerolum"], "drogi": ["odbyt"], "uwagi": "Szybkie działanie, także dla dzieci."},
+        {"nazwa": "Nasiona babki płesznik (błonnik)", "substancje": ["Psylli"], "droga": "ogolna", "uwagi": "Popijać dużą ilością wody; odstęp od innych leków."}
+      ],
+      "porady": ["Więcej błonnika i płynów, ruch.", "Nie odkładać potrzeby wypróżnienia."]
+    },
+    {
+      "id": "nudnosci", "nazwa": "Nudności, choroba lokomocyjna", "kategoria": "Układ pokarmowy", "szukaj": ["wymioty", "mdłości", "podróż", "lokomocyjna"],
+      "alarmowe": [
+        "Wymioty krwią lub treścią „fusowatą”",
+        "Silny ból brzucha lub głowy, sztywność karku",
+        "Wymioty po urazie głowy",
+        "Objawy odwodnienia albo wymioty trwające ponad 24–48 godzin",
+        "Uporczywe wymioty w ciąży"
+      ],
+      "opcje": [
+        {"nazwa": "Dimenhydrynat", "substancje": ["Dimenhydrinatum"], "droga": "ogolna", "uwagi": "W chorobie lokomocyjnej – 30–60 minut przed podróżą. Powoduje senność – kierowca nie powinien przyjmować."},
+        {"nazwa": "Kłącze imbiru", "substancje": ["Zingiberis"], "droga": "ogolna", "uwagi": "Lek roślinny o łagodnym działaniu."}
+      ],
+      "porady": ["W podróży: miejsce z przodu pojazdu, patrzenie na horyzont, unikanie czytania.", "Przy wymiotach – nawadnianie małymi porcjami."]
+    },
+    {
+      "id": "bol_brzucha", "nazwa": "Skurczowy ból brzucha", "kategoria": "Układ pokarmowy", "szukaj": ["skurcze", "kolka", "jelita", "brzuch"],
+      "alarmowe": [
+        "Silny, narastający ból, twardy brzuch",
+        "Ból w prawym dolnym kwadrancie brzucha (możliwe zapalenie wyrostka)",
+        "Gorączka, wymioty, krew w stolcu, czarne stolce",
+        "Możliwa ciąża",
+        "Ból promieniujący do pleców lub klatki piersiowej, z dusznością lub omdleniem"
+      ],
+      "opcje": [
+        {"nazwa": "Drotaweryna", "substancje": ["Drotaverinum"], "droga": "ogolna", "uwagi": "Rozkurczowo."},
+        {"nazwa": "Butylobromek hioscyny", "substancje": ["Hyoscinum"], "droga": "ogolna", "uwagi": "Przeciwwskazany przy jaskrze z wąskim kątem i zatrzymaniu moczu."},
+        {"nazwa": "Mebeweryna", "substancje": ["Mebeverinum"], "droga": "ogolna", "uwagi": "W zespole jelita drażliwego rozpoznanym przez lekarza."},
+        {"nazwa": "Trimebutyna", "substancje": ["Trimebutinum"], "droga": "ogolna", "uwagi": "Reguluje motorykę przewodu pokarmowego."}
+      ],
+      "porady": ["Ciepły okład, lekkostrawna dieta."]
+    },
+
+    {
+      "id": "bezsennosc", "nazwa": "Trudności z zasypianiem (okresowe)", "kategoria": "Inne", "szukaj": ["sen", "bezsenność", "zasypianie"],
+      "alarmowe": [
+        "Bezsenność trwająca ponad 3 tygodnie",
+        "Obniżony nastrój, lęk, myśli rezygnacyjne lub samobójcze",
+        "Głośne chrapanie z przerwami w oddychaniu, senność w ciągu dnia (możliwy bezdech senny)",
+        "Bezsenność związana z bólem, dusznością lub częstym oddawaniem moczu w nocy"
+      ],
+      "opcje": [
+        {"nazwa": "Melatonina (lek)", "substancje": ["Melatoninum"], "droga": "ogolna", "uwagi": "Głównie przy zaburzeniach rytmu snu (praca zmianowa, zmiana stref czasowych) i u osób starszych."},
+        {"nazwa": "Kozłek lekarski (waleriana)", "substancje": ["Valerianae"], "droga": "ogolna", "uwagi": "Łagodne działanie, pełny efekt po 2–4 tygodniach."},
+        {"nazwa": "Doksylamina", "substancje": ["Doxylaminum"], "droga": "ogolna", "uwagi": "Tylko doraźnie, krótko; działanie antycholinergiczne, senność następnego dnia; unikać u seniorów, przy jaskrze i przeroście prostaty."}
+      ],
+      "porady": ["Higiena snu: stałe pory, bez ekranów przed snem, chłodna sypialnia.", "Ograniczyć kofeinę po południu i alkohol."]
+    },
+    {
+      "id": "rzucanie_palenia", "nazwa": "Rzucanie palenia", "kategoria": "Inne", "szukaj": ["papierosy", "nikotyna", "palenie"],
+      "alarmowe": [
+        "Ciąża – wybór metody z lekarzem",
+        "Niedawny zawał, udar, niestabilna choroba wieńcowa lub poważne zaburzenia rytmu serca",
+        "Depresja lub inne zaburzenia psychiczne w wywiadzie"
+      ],
+      "opcje": [
+        {"nazwa": "Nikotynowa terapia zastępcza (plastry, gumy, tabletki do ssania, spray)", "substancje": ["Nicotinum"], "uwagi": "Łączenie plastra z formą doraźną zwiększa skuteczność."},
+        {"nazwa": "Cytyzyna", "substancje": ["Cytisinum", "Cytisiniclinum"], "droga": "ogolna", "uwagi": "Według schematu z ulotki (ok. 25 dni); od 5. dnia całkowicie przestać palić."}
+      ],
+      "porady": ["Ustalić datę rzucenia, unikać sytuacji wyzwalających.", "Bezpłatna pomoc: Telefoniczna Poradnia Pomocy Palącym."]
+    },
+    {
+      "id": "zylaki", "nazwa": "Uczucie ciężkich nóg, żylaki", "kategoria": "Inne", "szukaj": ["nogi", "obrzęki", "żyły", "ciężkie nogi"],
+      "alarmowe": [
+        "Jednostronny obrzęk i ból łydki (możliwa zakrzepica)",
+        "Duszność lub ból w klatce piersiowej (możliwa zatorowość płucna) – pilnie",
+        "Zaczerwieniona, bolesna, twarda żyła",
+        "Owrzodzenie lub zmiany skórne na podudziu",
+        "Obrzęki obu nóg z dusznością (możliwa niewydolność serca)"
+      ],
+      "opcje": [
+        {"nazwa": "Diosmina (doustnie)", "substancje": ["Diosminum"], "droga": "ogolna", "uwagi": "Efekt po kilku tygodniach regularnego stosowania."},
+        {"nazwa": "Escyna", "substancje": ["Escinum"], "uwagi": "Doustnie lub w żelu."},
+        {"nazwa": "Trokserutyna", "substancje": ["Troxerutinum"], "uwagi": "Doustnie lub w żelu."},
+        {"nazwa": "Heparyna w żelu", "drogi": ["skór"], "substancje": ["Heparinum"], "droga": "miejscowa", "uwagi": "Na siniaki i stłuczenia; nie na uszkodzoną skórę."}
+      ],
+      "porady": ["Ruch, uniesienie nóg, unikanie długiego stania i siedzenia.", "Wyroby uciskowe (podkolanówki, pończochy) – dobór w aptece."]
+    },
+    {
+      "id": "zaburzenia_erekcji", "nazwa": "Zaburzenia erekcji", "kategoria": "Inne", "szukaj": ["erekcja", "potencja"],
+      "alarmowe": [
+        "Ból w klatce piersiowej lub duszność przy wysiłku, choroba serca",
+        "Pacjent przyjmuje azotany (nitrogliceryna, monoazotan izosorbidu) lub molsydominę – przeciwwskazane",
+        "Niedawny zawał lub udar, ciężka niewydolność wątroby, niskie ciśnienie",
+        "Pierwsze objawy u młodego mężczyzny lub nagły początek",
+        "Erekcja trwająca ponad 4 godziny – pilnie do lekarza"
+      ],
+      "opcje": [
+        {"nazwa": "Sildenafil", "substancje": ["Sildenafilum"], "droga": "ogolna", "uwagi": "Bez recepty dla dorosłych mężczyzn, ok. godziny przed aktywnością, nie częściej niż raz na dobę. Bezwzględnie nie z azotanami."},
+        {"nazwa": "Tadalafil", "substancje": ["Tadalafilum"], "droga": "ogolna", "uwagi": "Dłuższe działanie; bezwzględnie nie z azotanami."}
+      ],
+      "porady": ["Zaburzenia erekcji mogą być pierwszym objawem chorób serca, cukrzycy lub nadciśnienia – warto wykonać badania u lekarza."]
+    },
+
+    {
+      "id": "opryszczka", "nazwa": "Opryszczka wargowa", "kategoria": "Skóra i błony śluzowe", "szukaj": ["zimno", "pęcherzyki", "warga", "herpes"],
+      "alarmowe": [
+        "Zmiany w okolicy oka lub na nosie blisko oka",
+        "Zmiany rozległe, bardzo bolesne lub nieustępujące po 10 dniach",
+        "Osoba z obniżoną odpornością, kobieta w ciąży, noworodek lub niemowlę",
+        "Częste nawroty (ponad 6 razy w roku)"
+      ],
+      "opcje": [
+        {"nazwa": "Acyklowir krem", "drogi": ["skór"], "substancje": ["Aciclovirum"], "droga": "miejscowa", "uwagi": "Zacząć jak najwcześniej (mrowienie, pieczenie); smarować kilka razy dziennie."},
+        {"nazwa": "Inne preparaty na opryszczkę", "atc": ["D06BB"], "uwagi": "Leki przeciwwirusowe do stosowania na skórę."}
+      ],
+      "porady": ["Nie dotykać zmian, myć ręce; osobny ręcznik.", "Unikać całowania i dzielenia się kubkiem do czasu wygojenia."]
+    },
+    {
+      "id": "grzybica_stop", "nazwa": "Grzybica stóp lub skóry", "kategoria": "Skóra i błony śluzowe", "szukaj": ["stopy", "palce", "swędzenie", "grzybica"],
+      "alarmowe": [
+        "Cukrzyca lub zaburzenia krążenia w nogach",
+        "Zaczerwienienie i obrzęk rozszerzające się na stopę lub podudzie, gorączka (możliwe zakażenie bakteryjne, róża)",
+        "Zmiany na owłosionej skórze głowy lub na twarzy",
+        "Brak poprawy po 2 tygodniach leczenia"
+      ],
+      "opcje": [
+        {"nazwa": "Terbinafina na skórę", "drogi": ["skór"], "substancje": ["Terbinafinum"], "droga": "miejscowa", "uwagi": "Krótkie leczenie (zwykle 1 tydzień)."},
+        {"nazwa": "Klotrimazol na skórę", "drogi": ["skór"], "substancje": ["Clotrimazolum"], "droga": "miejscowa", "uwagi": "Kontynuować 2 tygodnie po ustąpieniu objawów."},
+        {"nazwa": "Mikonazol na skórę", "drogi": ["skór"], "substancje": ["Miconazolum"], "droga": "miejscowa", "uwagi": "Kontynuować po ustąpieniu objawów."},
+        {"nazwa": "Bifonazol", "drogi": ["skór"], "substancje": ["Bifonazolum"], "droga": "miejscowa", "uwagi": "Raz dziennie."}
+      ],
+      "porady": ["Dokładne osuszanie stóp i przestrzeni między palcami, przewiewne obuwie, klapki na basenie.", "Dezynfekcja obuwia."]
+    },
+    {
+      "id": "grzybica_paznokci", "nazwa": "Grzybica paznokci", "kategoria": "Skóra i błony śluzowe", "szukaj": ["paznokcie", "paznokieć"],
+      "alarmowe": [
+        "Zajęte więcej niż 2–3 paznokcie albo okolica macierzy paznokcia",
+        "Cukrzyca, zaburzenia krążenia, obniżona odporność",
+        "Ból, zaczerwienienie, ropa wokół paznokcia"
+      ],
+      "opcje": [
+        {"nazwa": "Amorolfina (lakier)", "substancje": ["Amorolfinum"], "droga": "miejscowa", "uwagi": "Długie leczenie: 6 miesięcy (palce rąk) do 9–12 miesięcy (stopy)."},
+        {"nazwa": "Cyklopiroks (lakier)", "substancje": ["Ciclopiroxum"], "droga": "miejscowa", "uwagi": "Długie leczenie, codziennie."}
+      ],
+      "porady": ["Przed nałożeniem lakieru spiłować zmieniony paznokieć (osobny pilnik)."]
+    },
+    {
+      "id": "grzybica_pochwy", "nazwa": "Upławy i świąd okolic intymnych (grzybica pochwy)", "kategoria": "Skóra i błony śluzowe", "szukaj": ["intymna", "pochwa", "świąd", "upławy", "drożdżyca"],
+      "alarmowe": [
+        "Pierwszy taki epizod w życiu",
+        "Ciąża",
+        "Wiek poniżej 16 lub powyżej 60 lat",
+        "Więcej niż 2 epizody w ciągu 6 miesięcy",
+        "Gorączka, ból podbrzusza, krwawienie",
+        "Upławy o nieprzyjemnym zapachu, zielonkawe lub pieniste (możliwa inna przyczyna niż grzybica)",
+        "Owrzodzenia, pęcherzyki, objawy u partnera"
+      ],
+      "opcje": [
+        {"nazwa": "Klotrimazol dopochwowo", "drogi": ["pochw"], "substancje": ["Clotrimazolum"], "droga": "miejscowa", "uwagi": "Tabletki lub globulki dopochwowe, często w zestawie z kremem."},
+        {"nazwa": "Fentikonazol dopochwowo", "drogi": ["pochw"], "substancje": ["Fenticonazolum"], "droga": "miejscowa", "uwagi": "Globulki lub kapsułki dopochwowe."},
+        {"nazwa": "Inne leki przeciwgrzybicze dopochwowe", "atc": ["G01AF"], "uwagi": "Sprawdzić skład i schemat w ulotce."}
+      ],
+      "porady": ["Bawełniana bielizna, unikać irygacji i perfumowanych środków higieny."]
+    },
+    {
+      "id": "pecherz", "nazwa": "Pieczenie przy oddawaniu moczu (kobiety)", "kategoria": "Skóra i błony śluzowe", "szukaj": ["mocz", "pęcherz", "cewka", "zapalenie pęcherza", "siusianie"],
+      "alarmowe": [
+        "Mężczyzna, dziecko, kobieta w ciąży",
+        "Gorączka, dreszcze, ból w okolicy lędźwiowej (możliwe zapalenie nerek)",
+        "Krew w moczu",
+        "Cukrzyca, cewnik, kamica, choroby nerek",
+        "Objawy trwające ponad 2–3 dni lub nawracające",
+        "Upławy lub świąd pochwy (inna przyczyna)"
+      ],
+      "opcje": [
+        {"nazwa": "Furazydyna", "substancje": ["Furazidinum", "Furaginum"], "droga": "ogolna", "uwagi": "Bez recepty tylko krótko w niepowikłanym zapaleniu pęcherza u kobiet; przyjmować z posiłkiem; mocz może zmienić kolor."},
+        {"nazwa": "Liść mącznicy lekarskiej", "substancje": ["Uvae"], "droga": "ogolna", "uwagi": "Lek roślinny, krótko (do tygodnia); nie w ciąży i podczas karmienia."}
+      ],
+      "porady": ["Dużo płynów, częste oddawanie moczu.", "Brak poprawy po 2–3 dniach – lekarz (może być potrzebny antybiotyk)."]
+    },
+    {
+      "id": "ukaszenia", "nazwa": "Swędzenie po ukąszeniu owadów, łagodna pokrzywka", "kategoria": "Skóra i błony śluzowe", "szukaj": ["komar", "owad", "swędzenie", "pokrzywka", "ukąszenie"],
+      "alarmowe": [
+        "Obrzęk twarzy, warg, języka, duszność, chrypka, zawroty głowy – możliwa anafilaksja (112)",
+        "Ukąszenie w jamie ustnej lub gardle",
+        "Rumień powiększający się wokół miejsca ukąszenia przez kleszcza (rumień wędrujący)",
+        "Rozległy, gorący, bolesny obrzęk z gorączką (zakażenie)",
+        "Pokrzywka trwająca ponad 6 tygodni lub nawracająca"
+      ],
+      "opcje": [
+        {"nazwa": "Dimetynden żel", "drogi": ["skór"], "substancje": ["Dimetindenum"], "droga": "miejscowa", "uwagi": "Łagodzi świąd; nie na duże powierzchnie u małych dzieci; unikać słońca na posmarowane miejsce."},
+        {"nazwa": "Hydrokortyzon krem", "drogi": ["skór"], "substancje": ["Hydrocortisonum"], "droga": "miejscowa", "uwagi": "Krótko (do 7 dni), nie na twarz bez zalecenia lekarza; ograniczenia wiekowe w ulotce."},
+        {"nazwa": "Lek przeciwhistaminowy doustnie", "substancje": ["Cetirizinum", "Levocetirizinum", "Loratadinum", "Desloratadinum", "Bilastinum", "Fexofenadinum"], "droga": "ogolna", "uwagi": "Przy licznych ukąszeniach lub pokrzywce."}
+      ],
+      "porady": ["Zimny okład; nie drapać.", "Repelenty i moskitiery zapobiegawczo."]
+    },
+    {
+      "id": "oparzenie", "nazwa": "Drobne oparzenie, oparzenie słoneczne", "kategoria": "Skóra i błony śluzowe", "szukaj": ["słońce", "oparzenie", "poparzenie", "rumień"],
+      "alarmowe": [
+        "Oparzenie z dużymi pęcherzami lub większe niż dłoń pacjenta",
+        "Oparzenie twarzy, dłoni, stóp, krocza lub okolicy stawów",
+        "Oparzenie u małego dziecka lub seniora",
+        "Oparzenie chemiczne lub prądem",
+        "Gorączka, dreszcze, nudności po oparzeniu słonecznym (udar)"
+      ],
+      "opcje": [
+        {"nazwa": "Dekspantenol", "drogi": ["skór"], "substancje": ["Dexpanthenolum"], "droga": "miejscowa", "uwagi": "Wspomaga gojenie (pianka, maść, krem)."},
+        {"nazwa": "Leki przeciwbólowe doustnie", "substancje": ["Paracetamolum", "Ibuprofenum"], "droga": "ogolna", "uwagi": "Przy bolesnym oparzeniu słonecznym."}
+      ],
+      "porady": ["Natychmiast chłodzić letnią, bieżącą wodą przez 10–20 minut; nie stosować lodu, masła ani tłustych kremów na świeże oparzenie.", "Nie przekłuwać pęcherzy."]
+    },
+    {
+      "id": "tradzik", "nazwa": "Trądzik (łagodny)", "kategoria": "Skóra i błony śluzowe", "szukaj": ["pryszcze", "wypryski", "zaskórniki"],
+      "alarmowe": [
+        "Głębokie, bolesne guzy i torbiele albo blizny",
+        "Trądzik z objawami zaburzeń hormonalnych (nieregularne miesiączki, nadmierne owłosienie)",
+        "Nagły, nasilony trądzik u dorosłego (także polekowy, np. po sterydach)",
+        "Brak poprawy po 6–8 tygodniach leczenia"
+      ],
+      "opcje": [
+        {"nazwa": "Nadtlenek benzoilu", "substancje": ["Benzoylis"], "droga": "miejscowa", "uwagi": "Na początku może podrażniać skórę; odbarwia tkaniny."},
+        {"nazwa": "Kwas azelainowy", "substancje": ["Acidum azelaicum"], "droga": "miejscowa", "uwagi": "Dobrze tolerowany; także przy przebarwieniach."}
+      ],
+      "porady": ["Delikatne mycie dwa razy dziennie, kosmetyki niekomedogenne, nie wyciskać zmian.", "Efekt leczenia po 6–8 tygodniach."]
+    },
+    {
+      "id": "afty", "nazwa": "Afty, owrzodzenia jamy ustnej", "kategoria": "Skóra i błony śluzowe", "szukaj": ["jama ustna", "dziąsła", "owrzodzenie", "pleśniawki"],
+      "alarmowe": [
+        "Owrzodzenie niebolesne lub nieustępujące ponad 2–3 tygodnie",
+        "Bardzo liczne zmiany, gorączka, zmiany na skórze lub narządach płciowych",
+        "Owrzodzenia w trakcie leczenia metamizolem, metotreksatem lub chemioterapią"
+      ],
+      "opcje": [
+        {"nazwa": "Salicylan choliny (żel)", "drogi": ["ustn", "gardł", "dziąs"], "substancje": ["Cholini"], "droga": "miejscowa", "uwagi": "Działa przeciwbólowo; nie u dzieci poniżej 16 lat (salicylan)."},
+        {"nazwa": "Benzydamina (płukanie, spray)", "drogi": ["ustn", "gardł", "dziąs"], "substancje": ["Benzydaminum"], "droga": "miejscowa", "uwagi": "Łagodzi ból."},
+        {"nazwa": "Chlorheksydyna (płukanie)", "drogi": ["ustn", "gardł", "dziąs"], "substancje": ["Chlorhexidinum"], "droga": "miejscowa", "uwagi": "Antyseptycznie; przy dłuższym stosowaniu przebarwia zęby."}
+      ],
+      "porady": ["Unikać ostrych, kwaśnych i twardych pokarmów, miękka szczoteczka."]
+    }
+  ]
+}

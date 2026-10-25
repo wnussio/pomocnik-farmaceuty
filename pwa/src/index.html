@@ -35,8 +35,21 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7V4h3M18 4h3v3M21 17v3h-3M6 20H3v-3M7 8v8M10 8v8M13 8v8M16 8v8"/></svg>
         </button>
       </div>
+      <label class="ref-toggle"><input type="checkbox" id="p-refunded"> Ref. tylko refundowane</label>
       <ul class="results" id="product-results"></ul>
       <p class="empty" id="product-hint">Wpisz nazwę (np. apap, ketonal) albo zeskanuj kod z opakowania.</p>
+    </section>
+
+    <!-- Objawy: dobór leku bez recepty -->
+    <section class="panel hidden" id="panel-objawy">
+      <div class="medical-warning" role="note">
+        <strong>To nie jest porada medyczna ani diagnoza.</strong> Podpowiedzi pomagają farmaceucie dobrać lek bez recepty
+        w rozmowie z pacjentem. Decyzję podejmuje farmaceuta; przy objawach alarmowych lub braku poprawy – lekarz.
+      </div>
+      <input id="symptom-q" type="search" autocomplete="off" placeholder="Objaw (np. ból głowy, kaszel, katar)"
+             aria-label="Objaw">
+      <div id="symptom-list"></div>
+      <div id="symptom-card"></div>
     </section>
 
     <!-- Zamienniki -->
@@ -47,6 +60,7 @@
         <ul class="suggestions hidden" id="substance-suggestions"></ul>
       </div>
       <div class="chips" id="substance-chips"></div>
+      <label class="ref-toggle"><input type="checkbox" id="f-refunded"> Ref. tylko refundowane</label>
       <details class="filters hidden" id="eq-filters" open>
         <summary>Filtry</summary>
         <label>Moc odniesienia <select id="f-strength"></select></label>
@@ -82,9 +96,10 @@
         <button type="button" class="btn btn-link" id="clear-list">Wyczyść listę</button>
       </div>
       <div id="interaction-results"></div>
-      <p class="hint">Lista jest zapisana tylko w tym telefonie. Nie wpisuj danych pacjenta.</p>
-      <p class="disclaimer">Narzędzie pomocnicze o charakterze informacyjnym. Nie zastępuje ChPL ani oceny farmaceuty/lekarza.
-        Tabela interakcji jest wersją startową i wymaga weryfikacji.</p>
+      <p class="hint">Lista jest zapisana tylko w tym telefonie. Nie wpisuj danych pacjenta. Lista i ustawienia pacjenta
+        są uwzględniane także w podpowiedziach przy objawach.</p>
+      <p class="disclaimer">Wersja testowa. Narzędzie pomocnicze o charakterze informacyjnym – nie jest poradą medyczną.
+        Nie zastępuje ChPL ani oceny farmaceuty/lekarza. Tabele interakcji, ostrzeżeń i objawów są wersją startową i wymagają weryfikacji.</p>
     </section>
   </main>
 
@@ -110,6 +125,8 @@
   <nav class="bottom-nav" aria-label="Zakładki">
     <button type="button" class="nav active" data-tab="lek">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg>Lek</button>
+    <button type="button" class="nav" data-tab="objawy">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/><path d="M8 12h2l1-2 2 4 1-2h2"/></svg>Objawy</button>
     <button type="button" class="nav" data-tab="zamienniki">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>Zamienniki</button>
     <button type="button" class="nav" data-tab="suplementy">
